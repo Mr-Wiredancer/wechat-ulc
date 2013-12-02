@@ -135,11 +135,85 @@ exports.post = function(req, res){
         }
 
       }else if (isInCurrentSession(msg)){
-        console.log('third clause');
 
         //forward to corresopnding people 
         console.log('in current session'); 
+        var fromUserName = msg.FromUserName;
+
+        var session = currentSessions[fromUserName];
+
+        var toUserName;
+        if (fromUserName === session.client){
+          toUserName = session.kefu;
+        }else{
+          toUserName = session.client;
+        }
+
+        var msgData;
+        if (msg.MsgType === 'text'){
+          msgData = {
+            'touser': [toUserName],
+            'msgtype': ['text'],
+            'text': [{'content':msg.Content}]
+          };
+        }else if (msg.MsgType === 'image'){
+
+          msgData = {
+            'touser': [toUserName],
+            'msgtype': [msg.MsgType],
+            'image': [{'media_id': msg.MediaId}]
+          };
+        }else if (msg.MsgType === 'voice'){
+          msgData = {
+            'touser': [toUserName],
+            'msgtype': [msg.MsgType],
+            'voice': [{'media_id': msg.MediaId}]
+          }
+        }
+        console.log(msgData);
+        var forwardMsg = new WeixinMessage(msgData);
+        forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
+        return;
+      }else if( kefuList.indexOf(msg.FromUserName)<0 ){
+        if (msgQueue.length === 0 || msgQueue[0].MsgType!='kefu' ){
+          msgQueue.push(msg);
+          res.send(msg.makeResponseMessage('text', '暂时没有在线的客服，请耐心等候'));
+        } else {
+          var kefuMsg = msgQueue.shift();
+          var client = msg.FromUserName;
+          var kefu = kefuMsg.FromUserName;
+          currentSessions[client] = currentSessions[kefu] = {'client':client, 'kefu':kefu};
+
+          var msgData;
+          if (msg.MsgType === 'text'){
+            msgData = {
+              'touser': [kefu],
+              'msgtype': ['text'],
+              'text': [{'content':msg.Content}]
+            };
+          }else if (msg.MsgType === 'image'){
+
+            msgData = {
+              'touser': [kefu],
+              'msgtype': [waitMsg.msg],
+              'image': [{'media_id': msg.MediaId}]
+            };
+          }else if (msg.MsgType === 'voice'){
+            msgData = {
+              'touser': [kefu],
+              'msgtype': [msg.MsgType],
+              'voice': [{'media_id': msg.MediaId}]
+            }
+          }        
+          var forwardMsg = new WeixinMessage(msgData);
+          forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
+          return;
+        }
+
+      }else{
+
       }
+
   	});
   });
 
@@ -166,7 +240,7 @@ var isInMsgQueue = function(kefuID){
 }
 
 var isInCurrentSession = function(msg){
-  return false;
+  return msg.FromUserName in currentSessions;
 }
 
 //微信的服务器配置测试
