@@ -49,7 +49,7 @@ exports.post = function(req, res){
         //currently system command is to register current user as kefu
         console.log('system command');
         var user = msg.FromUserName;
-        if (kefuList.indexOf(user)<0){
+        if (kefuList.indexOf(user)>-1){
           var responseMsg = msg.makeResponseMessage('text', '您已注册成为客服，请不要重复注册');
           res.send(responseMsg.toXML());
         }else{
