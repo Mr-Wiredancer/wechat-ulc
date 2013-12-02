@@ -98,6 +98,7 @@ exports.post = function(req, res){
                   'voice': {'media_id': waitMsg.MediaId}
                 }
               }
+              console.log(msgData);
               var forwardMsg = new WeixinMessage(msgData);
               forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
               return;
