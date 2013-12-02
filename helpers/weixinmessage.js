@@ -3,6 +3,7 @@ var TEXTTYPE = 'text'
 	, VIDEOTYPE = 'video'
 	, LOCATIONTYPE = 'location'
 	, IMAGETYPE = 'image'
+	, requestify = require('requestify')
     , Js2Xml = require('js2xml').Js2Xml;
 
 
@@ -27,15 +28,32 @@ WeixinMessage.prototype.isImage = function(){
 WeixinMessage.prototype.toXML = function(){
 	var result = new Js2Xml('xml', this);
 	return result.toString();
-}
+};
 
 WeixinMessage.prototype.toJSON = function(){
 	return JSON.stringify(this);
-}
+};
 
 WeixinMessage.prototype.isSystemCommand = function(){
 	var pattern = /^register31415926$/; //register as kefu
 	return pattern.test(this.Content);
+};
+
+WeixinMessage.prototype.sendThroughKefuInterface = function(token){
+	requestify.post('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='+token, this.toJSON);
+	return;
+}
+
+WeixinMessage.prototype.isKefuCommand = function(){
+	return this.isKefuStartCommand() || this.isKefuEndCommand();
+};
+
+WeixinMessage.prototype.isKefuStartCommand = function(){
+	return /^beginwork$/.test(this.Content);
+}
+
+WeixinMessage.prototype.isKefuEndCommand = function(){
+	return /^endwork$/.test(this.Content);
 }
 
 WeixinMessage.prototype.makeResponseMessage = function(type, content){
@@ -52,6 +70,6 @@ WeixinMessage.prototype.makeResponseMessage = function(type, content){
 	}
 
 	return msg;
-}
+};
 
 module.exports = WeixinMessage;

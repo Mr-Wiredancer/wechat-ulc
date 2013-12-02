@@ -45,10 +45,7 @@ exports.post = function(req, res){
   		var xml = result.xml
   			, msg = new WeixinMessage(xml);
 
-      if (isInCurrentSession(msg)){
-        //forward to corresopnding people 
-        console.log('in current session'); 
-      }else if ( msg.isSystemCommand() ){
+      if ( msg.isSystemCommand() ){
         //currently system command is to register current user as kefu
         console.log('system command');
         var user = msg.FromUserName;
@@ -61,22 +58,100 @@ exports.post = function(req, res){
           var responseMsg = msg.makeResponseMessage('text', '您已成功注册成为客服');
           res.send(responseMsg.toXML());
         }
-        console.log(responseMsg);
-      }else if ( isKefuCommand(msg) ){
-        console.log('kefu message');
-      }
+        return;
+      }else if ( kefuList.indexOf(msg.FromUserName)>-1 && msg.isKefuCommand()){
+        var kefu = msg.FromUserName;
 
+        if (msg.isKefuStartCommand()){
+          if ( !(kefu in currentSessions) && msgQueue.length!=0 && !isInMsgQueue(kefu) ){
+
+            var waitMsg = msgQueue[0];
+            if ( waitMsg.MsgType != 'kefu' ){
+
+              msgQueue = msgQueue.slice(1);
+              var client = waitMsg.FromUserName;
+              currentSessions[client] = currentSessions[kefu] = {'client':client, 'kefu':kefu};
+
+              //TODO: send client message to kefu
+              var forwardMsg;
+              if (waitMsg.MsgType === 'text'){
+                forwardMsg = {
+                  'touser': kefu,
+                  'msgtype': 'text',
+                  'text': {'content':waitMsg.Content}
+                };
+              }else if (waitMsg.MsgType === 'image'){
+
+                forwardMsg = {
+                  'touser': kefu,
+                  'msgtype': waitMsg.MsgType,
+                  'image': {'media_id': waitMsg.MediaId}
+                };
+              }else if (waitMsg.MsgType === 'voice'){
+                forwardMsg = {
+                  'touser': kefu,
+                  'msgtype': waitMsg.MsgType,
+                  'voice': {'media_id': waitMsg.MediaId}
+                }
+              }
+              forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
+              return;
+            }
+          
+
+            var m = new WeixinMessage({'FromUserName':msg.FromUserName, 'MsgType': 'kefu'});
+            msgQueue.push(m);
+            res.send(msg.makeResponseMessage('text', '暂时没有在等待的客户，请耐心等候').toXML());
+            return;
+
+          }else{
+            res.send(msg.makeResponseMessage('text', '你已经在工作中，不需要重复打卡').toXML());
+            return;
+          }
+
+        }else if ( kefuList.indexOf(msg.FromUserName)>-1 && msg.isKefuEndCOmmand() ){
+          var kefu = msg.FromUserName;
+          if (isInMsgQueue(kefu)){
+            deleteMsgFromQueue(kefu);
+          }else if (kefu in currentSessions) {
+            res.send(msg.makeResponseMessage('text', '请结束与当前用户的对话后再下班').toXML());
+          }else{
+            res.send(msg.makeResponseMessage('text', '你还没打卡上班').toXML());
+          }
+          return;
+        }
+
+      }else if (isInCurrentSession(msg)){
+        //forward to corresopnding people 
+        console.log('in current session'); 
+      }
   	});
   });
 
 }
 
-var isInCurrentSession = function(msg){
+var deleteMsgFromQueue = function(kefuID){
+  var i;
+  for ( i = 0; i < msgQueue.length; i++ ){
+    if ( msgQueue[i].FromUserName === kefuID ){
+        break;
+    }
+  }
+  msgQueue.splice(i, 1);
+  return;
+}
+
+var isInMsgQueue = function(kefuID){
+  for (var i = 0; i < msgQueue.length; i++){
+    if ( msgQueue[i].FromUserName === kefuID ){
+        return true;
+    }
+  }
   return false;
 }
 
-var isKefuCommand = function(msg){
-  return false; 
+var isInCurrentSession = function(msg){
+  return false;
 }
 
 //微信的服务器配置测试
