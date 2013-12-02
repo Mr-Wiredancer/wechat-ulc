@@ -15,15 +15,18 @@ var TOKEN = 'dxhackers'
 
 
 //NOT A GOOD IDEA: update the accesstoken every 7100s (weixin's expires every 7200s)
-setInterval(function(){
+var updateAccessToken = function(){
   requestify.get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='+APPID+'&secret='+APPSECRET).then(function(response){
-      var token = response.getBody().access_token;
+      var token = response.getBody()['access_token'];
+      console.log(response.getBody());
       if (token){
-        console.log('updated access token to '+token);
         ACCESSTOKEN = token;
       }
   });
-}, 7100*1000);
+};
+
+updateAccessToken();
+setInterval(updateAccessToken, 7100*1000);
 
 exports.post = function(req, res){
 	if (!isValidWeixinRequest(req.query.signature, req.query.timestamp, req.query.nonce)){
