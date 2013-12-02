@@ -68,6 +68,7 @@ exports.post = function(req, res){
 
           if ( !(kefu in currentSessions) && msgQueue.length!=0 && !isInMsgQueue(kefu) ){
 
+            console.log(msgQueue);
             var waitMsg = msgQueue[0];
             if ( waitMsg.MsgType != 'kefu' ){
               console.log('thre\'s a match and needa forward the msg');
