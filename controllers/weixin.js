@@ -105,7 +105,6 @@ exports.post = function(req, res){
               return;
             }
           
-
             var m = new WeixinMessage({'FromUserName':[msg.FromUserName], 'MsgType': ['kefu']});
             msgQueue.push(m);
             res.send(msg.makeResponseMessage('text', '暂时没有在等待的客户，请耐心等候').toXML());
