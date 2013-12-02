@@ -44,7 +44,7 @@ exports.post = function(req, res){
 
       if (isInCurrentSession(msg)){
         //forward to corresopnding people  
-      }else if ( isSystemCommand(msg) ){
+      }else if ( msg.isSystemCommand() ){
         //currently system command is to register current user as kefu
         var user = msg.FromUserName;
         if (kefuList.indexOf(user)<0){
@@ -70,7 +70,7 @@ var isInCurrentSession = function(msg){
 }
 
 var isKefuCommand = function(msg){
-  return false;
+  return false; 
 }
 
 //微信的服务器配置测试
