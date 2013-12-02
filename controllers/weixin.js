@@ -1,4 +1,6 @@
 var TOKEN = 'dxhackers'
+  , crypto = require('crypto')
+  , parseString = xml2js.parseString
   , currentSessions  = {}
   , msgQueue = []
   , kefuList = []
