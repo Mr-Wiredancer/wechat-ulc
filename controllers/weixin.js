@@ -81,22 +81,22 @@ exports.post = function(req, res){
               var msgData;
               if (waitMsg.MsgType === 'text'){
                 msgData = {
-                  'touser': kefu,
-                  'msgtype': 'text',
-                  'text': {'content':waitMsg.Content}
+                  'touser': [kefu],
+                  'msgtype': ['text'],
+                  'text': [{'content':waitMsg.Content}]
                 };
               }else if (waitMsg.MsgType === 'image'){
 
                 msgData = {
-                  'touser': kefu,
-                  'msgtype': waitMsg.MsgType,
-                  'image': {'media_id': waitMsg.MediaId}
+                  'touser': [kefu],
+                  'msgtype': [waitMsg.MsgType],
+                  'image': [{'media_id': waitMsg.MediaId}]
                 };
               }else if (waitMsg.MsgType === 'voice'){
                 msgData = {
-                  'touser': kefu,
-                  'msgtype': waitMsg.MsgType,
-                  'voice': {'media_id': waitMsg.MediaId}
+                  'touser': [kefu],
+                  'msgtype': [waitMsg.MsgType],
+                  'voice': [{'media_id': waitMsg.MediaId}]
                 }
               }
               console.log(msgData);
@@ -106,14 +106,14 @@ exports.post = function(req, res){
             }
           
 
-            var m = new WeixinMessage({'FromUserName':msg.FromUserName, 'MsgType': 'kefu'});
+            var m = new WeixinMessage({'FromUserName':[msg.FromUserName], 'MsgType': ['kefu']});
             msgQueue.push(m);
             res.send(msg.makeResponseMessage('text', '暂时没有在等待的客户，请耐心等候').toXML());
             return;
 
           }else{
             if (msgQueue.length === 0){
-              var m = new WeixinMessage({'FromUserName':msg.FromUserName, 'MsgType': 'kefu'});
+              var m = new WeixinMessage({'FromUserName':[msg.FromUserName], 'MsgType': ['kefu']});
               msgQueue.push(m);
               res.send(msg.makeResponseMessage('text', '暂时没有在等待的客户，请耐心等候').toXML());
             }else{
