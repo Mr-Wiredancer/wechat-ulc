@@ -42,10 +42,14 @@ exports.post = function(req, res){
   		var xml = result.xml
   			, msg = new WeixinMessage(xml);
 
+      console.log(msg);
+
       if (isInCurrentSession(msg)){
-        //forward to corresopnding people  
+        //forward to corresopnding people 
+        console.log('in corrent session'); 
       }else if ( msg.isSystemCommand() ){
         //currently system command is to register current user as kefu
+        console.log('system command');
         var user = msg.FromUserName;
         if (kefuList.indexOf(user)<0){
           var responseMsg = msg.makeResponseMessage('text', '您已注册成为客服，请不要重复注册');
@@ -57,7 +61,7 @@ exports.post = function(req, res){
           res.send(responseMsg.toXML());
         }
       }else if ( isKefuCommand(msg) ){
-
+        console.log('kefu message');
       }
 
   	});
