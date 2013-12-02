@@ -30,7 +30,7 @@ WeixinMessage.prototype.toXML = function(){
 	return result.toString();
 };
 
-WeixinMessage.prototype.toJSON = function(){
+WeixinMessage.prototype.toFormatJSON = function(){
 	return JSON.stringify(this);
 };
 
@@ -40,7 +40,7 @@ WeixinMessage.prototype.isSystemCommand = function(){
 };
 
 WeixinMessage.prototype.sendThroughKefuInterface = function(token){
-	requestify.post('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='+token, this.toJSON);
+	requestify.post('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='+token, this.toFormatJSON());
 	return;
 }
 
