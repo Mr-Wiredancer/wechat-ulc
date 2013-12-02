@@ -65,10 +65,13 @@ exports.post = function(req, res){
 
 }
 
-var sendKefuMsg = function(user, type, content){
-
+var isInCurrentSession = function(msg){
+  return false;
 }
 
+var isKefuCommand = function(msg){
+  return false;
+}
 
 //微信的服务器配置测试
 exports.test = function(req, res){
