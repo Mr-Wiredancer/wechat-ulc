@@ -43,6 +43,7 @@ WeixinMessage.prototype.makeResponseMessage = function(type, content){
 	msg.FromUserName = this.ToUserName;
 	msg.ToUserName = this.FromUserName;
 
+	msg.MsgType = type;
 	msg.CreateTime = (new Date).getTime().toString();
 	if (type === TEXTTYPE){
 		msg.Content = content;
