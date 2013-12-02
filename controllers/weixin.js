@@ -42,11 +42,9 @@ exports.post = function(req, res){
   		var xml = result.xml
   			, msg = new WeixinMessage(xml);
 
-      console.log(msg);
-
       if (isInCurrentSession(msg)){
         //forward to corresopnding people 
-        console.log('in corrent session'); 
+        console.log('in current session'); 
       }else if ( msg.isSystemCommand() ){
         //currently system command is to register current user as kefu
         console.log('system command');
@@ -60,6 +58,7 @@ exports.post = function(req, res){
           var responseMsg = msg.makeResponseMessage('text', '您已成功注册成为客服');
           res.send(responseMsg.toXML());
         }
+        console.log(responseMsg);
       }else if ( isKefuCommand(msg) ){
         console.log('kefu message');
       }
