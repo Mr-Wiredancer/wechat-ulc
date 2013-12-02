@@ -65,6 +65,7 @@ exports.post = function(req, res){
         var kefu = msg.FromUserName;
 
         if (msg.isKefuStartCommand()){
+
           if ( !(kefu in currentSessions) && msgQueue.length!=0 && !isInMsgQueue(kefu) ){
 
             var waitMsg = msgQueue[0];
@@ -107,7 +108,13 @@ exports.post = function(req, res){
             return;
 
           }else{
-            res.send(msg.makeResponseMessage('text', '你已经在工作中，不需要重复打卡').toXML());
+            if (msgQueue.length === 0){
+              var m = new WeixinMessage({'FromUserName':msg.FromUserName, 'MsgType': 'kefu'});
+              msgQueue.push(m);
+              res.send(msg.makeResponseMessage('text', '暂时没有在等待的客户，请耐心等候').toXML());
+            }else{
+              res.send(msg.makeResponseMessage('text', '你已经在工作中，不需要重复打卡').toXML());
+            }
             return;
           }
 
