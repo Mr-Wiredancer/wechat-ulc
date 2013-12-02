@@ -121,10 +121,11 @@ exports.post = function(req, res){
             return;
           }
 
-        }else if ( kefuList.indexOf(msg.FromUserName)>-1 && msg.isKefuEndCOmmand() ){
+        }else if ( kefuList.indexOf(msg.FromUserName)>-1 && msg.isKefuEndCommand() ){
           var kefu = msg.FromUserName;
           if (isInMsgQueue(kefu)){
             deleteMsgFromQueue(kefu);
+            res.send(msg.makeResponseMessage('text', '下班').toXML());
           }else if (kefu in currentSessions) {
             res.send(msg.makeResponseMessage('text', '请结束与当前用户的对话后再下班').toXML());
           }else{
