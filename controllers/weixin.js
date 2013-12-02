@@ -70,6 +70,7 @@ exports.post = function(req, res){
 
             var waitMsg = msgQueue[0];
             if ( waitMsg.MsgType != 'kefu' ){
+              console.log('thre\'s a match and needa forward the msg');
 
               msgQueue = msgQueue.slice(1);
               var client = waitMsg.FromUserName;
@@ -97,7 +98,7 @@ exports.post = function(req, res){
                   'voice': {'media_id': waitMsg.MediaId}
                 }
               }
-              forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
+              new WeixinMessage(forwardMsg).sendThroughKefuInterface(ACCESSTOKEN);
               return;
             }
           
