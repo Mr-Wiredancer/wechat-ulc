@@ -77,28 +77,29 @@ exports.post = function(req, res){
               currentSessions[client] = currentSessions[kefu] = {'client':client, 'kefu':kefu};
 
               //TODO: send client message to kefu
-              var forwardMsg;
+              var msgData;
               if (waitMsg.MsgType === 'text'){
-                forwardMsg = {
+                msgData = {
                   'touser': kefu,
                   'msgtype': 'text',
                   'text': {'content':waitMsg.Content}
                 };
               }else if (waitMsg.MsgType === 'image'){
 
-                forwardMsg = {
+                msgData = {
                   'touser': kefu,
                   'msgtype': waitMsg.MsgType,
                   'image': {'media_id': waitMsg.MediaId}
                 };
               }else if (waitMsg.MsgType === 'voice'){
-                forwardMsg = {
+                msgData = {
                   'touser': kefu,
                   'msgtype': waitMsg.MsgType,
                   'voice': {'media_id': waitMsg.MediaId}
                 }
               }
-              new WeixinMessage(forwardMsg).sendThroughKefuInterface(ACCESSTOKEN);
+              var forwardMsg = new WeixinMessage(forwardMsg);
+              forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
               return;
             }
           
