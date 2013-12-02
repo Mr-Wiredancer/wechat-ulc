@@ -11,7 +11,7 @@ var TOKEN = 'dxhackers'
 
 //NOT A GOOD IDEA: update the accesstoken every 7100s (weixin's expires every 7200s)
 setInterval(function(){
-  requestify.get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='+APPID+'&secret='+APPSECRET).then(funciton(response){
+  requestify.get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='+APPID+'&secret='+APPSECRET).then(function(response){
       var token = response.getBody().access_token;
       if (token){
         console.log('updated access token to '+token);
