@@ -60,6 +60,8 @@ exports.post = function(req, res){
         }
         return;
       }else if ( kefuList.indexOf(msg.FromUserName)>-1 && msg.isKefuCommand()){
+        console.log('是客服而且是客服命令');
+
         var kefu = msg.FromUserName;
 
         if (msg.isKefuStartCommand()){
@@ -122,6 +124,8 @@ exports.post = function(req, res){
         }
 
       }else if (isInCurrentSession(msg)){
+        console.log('third clause');
+
         //forward to corresopnding people 
         console.log('in current session'); 
       }
