@@ -34,8 +34,12 @@ WeixinMessage.prototype.toFormatJSON = function(){
 	return JSON.stringify(this);
 };
 
+WeixinMessage.prototype.isResetCommand = function(){
+	return /^reset$/.test(this.Content);
+}
+
 WeixinMessage.prototype.isSystemCommand = function(){
-	return this.isRegisterCommand() || this.isEndSessionCommand();
+	return this.isRegisterCommand() || this.isEndSessionCommand() || this.isResetCommand();
 };
 
 WeixinMessage.prototype.isEndSessionCommand = function(){

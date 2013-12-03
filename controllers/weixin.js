@@ -109,6 +109,11 @@ exports.post = function(req, res){
           }else{
             res.send(msg.makeResponseMessage('text', '您没有在任何会话里').toXML());
           }
+        }else if(msg.isResetCommand()){
+          msgQueue = [];
+          kefuList = [];
+          currentSessions = {};
+          res.send(msg.makeResponseMessage('text', '全部清除').toXML());
         }
 
         return;
@@ -179,31 +184,6 @@ exports.post = function(req, res){
         }
 
         forwardMsgTo(msg, toUserName);
-
-        // var msgData;
-        // if (msg.MsgType === 'text'){
-        //   msgData = {
-        //     'touser': [toUserName],
-        //     'msgtype': ['text'],
-        //     'text': [{'content':msg.Content}]
-        //   };
-        // }else if (msg.MsgType === 'image'){
-
-        //   msgData = {
-        //     'touser': [toUserName],
-        //     'msgtype': [msg.MsgType],
-        //     'image': [{'media_id': msg.MediaId}]
-        //   };
-        // }else if (msg.MsgType === 'voice'){
-        //   msgData = {
-        //     'touser': [toUserName],
-        //     'msgtype': [msg.MsgType],
-        //     'voice': [{'media_id': msg.MediaId}]
-        //   }
-        // }
-        // console.log(msgData);
-        // var forwardMsg = new WeixinMessage(msgData);
-        // forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
         return;
       }else if( kefuList.indexOf(msg.FromUserName)<0 ){
 
@@ -223,30 +203,6 @@ exports.post = function(req, res){
           currentSessions[client] = currentSessions[kefu] = {'client':client, 'kefu':kefu};
 
           forwardMsgTo(msg, kefu);
-          // var msgData;
-          // if (msg.MsgType === 'text'){
-          //   msgData = {
-          //     'touser': [kefu],
-          //     'msgtype': ['text'],
-          //     'text': [{'content':msg.Content}]
-          //   };
-          // }else if (msg.MsgType === 'image'){
-
-          //   msgData = {
-          //     'touser': [kefu],
-          //     'msgtype': [waitMsg.msg],
-          //     'image': [{'media_id': msg.MediaId}]
-          //   };
-          // }else if (msg.MsgType === 'voice'){
-          //   msgData = {
-          //     'touser': [kefu],
-          //     'msgtype': [msg.MsgType],
-          //     'voice': [{'media_id': msg.MediaId}]
-          //   }
-          // }        
-          // var forwardMsg = new WeixinMessage(msgData);
-          // console.log(forwardMsg);
-          // forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
           return;
         } 
       }else{
