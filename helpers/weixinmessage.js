@@ -40,7 +40,7 @@ WeixinMessage.prototype.isSystemCommand = function(){
 };
 
 WeixinMessage.prototype.sendThroughKefuInterface = function(token){
-	requestify.post('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='+token, this.toFormatJSON());
+	requestify.post('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='+token, this);
 	return;
 }
 
