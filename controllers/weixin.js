@@ -75,10 +75,15 @@ exports.post = function(req, res){
                   'touser': [kefu],
                   'msgtype': ['text'],
                   'text': [{'content':'会话已结束'}]
-                };
+                };                  
+
             var msg1 = new WeixinMessage(msgData);
+            console.log('msg1');
+            console.log(msg1);
             msgData.touser = [client];
             var msg2 = new WeixinMessage(msgData);
+            console.log('msg2');
+            console.log(msg2);
             msg1.sendThroughKefuInterface(ACCESSTOKEN);msg2.sendThroughKefuInterface(ACCESSTOKEN);
 
             
@@ -94,31 +99,7 @@ exports.post = function(req, res){
 
                 //TODO: send client message to kefu
                 forwardMsg(waitMsg, kefu);
-                // var msgData;
-                // if (waitMsg.MsgType === 'text'){
-                //   msgData = {
-                //     'touser': [kefu],
-                //     'msgtype': ['text'],
-                //     'text': [{'content':waitMsg.Content}]
-                //   };
-                // }else if (waitMsg.MsgType === 'image'){
 
-                //   msgData = {
-                //     'touser': [kefu],
-                //     'msgtype': [waitMsg.MsgType],
-                //     'image': [{'media_id': waitMsg.MediaId}]
-                //   };
-                // }else if (waitMsg.MsgType === 'voice'){
-                //   msgData = {
-                //     'touser': [kefu],
-                //     'msgtype': [waitMsg.MsgType],
-                //     'voice': [{'media_id': waitMsg.MediaId}]
-                //   }
-                // }
-                // console.log(msgData);
-                // var forwardMsg = new WeixinMessage(msgData);
-                // forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
-                // return;
               }
             }
 
@@ -147,33 +128,7 @@ exports.post = function(req, res){
               currentSessions[client] = currentSessions[kefu] = {'client':client, 'kefu':kefu};
 
               //TODO: send client message to kefu
-
               forwardMsg(waitMsg, kefu);
-              // var msgData;
-              // if (waitMsg.MsgType === 'text'){
-              //   msgData = {
-              //     'touser': [kefu],
-              //     'msgtype': ['text'],
-              //     'text': [{'content':waitMsg.Content}]
-              //   };
-              // }else if (waitMsg.MsgType === 'image'){
-
-              //   msgData = {
-              //     'touser': [kefu],
-              //     'msgtype': [waitMsg.MsgType],
-              //     'image': [{'media_id': waitMsg.MediaId}]
-              //   };
-              // }else if (waitMsg.MsgType === 'voice'){
-              //   msgData = {
-              //     'touser': [kefu],
-              //     'msgtype': [waitMsg.MsgType],
-              //     'voice': [{'media_id': waitMsg.MediaId}]
-              //   }
-              // }
-              // console.log(msgData);
-              // var forwardMsg = new WeixinMessage(msgData);
-              // forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
-              // return;
             }
           
             var m = new WeixinMessage({'FromUserName':[msg.FromUserName], 'MsgType': ['kefu']});
