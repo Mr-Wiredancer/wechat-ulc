@@ -49,15 +49,82 @@ exports.post = function(req, res){
         //currently system command is to register current user as kefu
         console.log('system command');
         var user = msg.FromUserName;
-        if (kefuList.indexOf(user)>-1){
-          var responseMsg = msg.makeResponseMessage('text', '您已注册成为客服，请不要重复注册');
-          res.send(responseMsg.toXML());
-        }else{
-          kefuList.push(msg.FromUserName);
-          
-          var responseMsg = msg.makeResponseMessage('text', '您已成功注册成为客服');
-          res.send(responseMsg.toXML());
+
+        if (msg.isRegisterCommand()){
+          if (kefuList.indexOf(user)>-1){
+            var responseMsg = msg.makeResponseMessage('text', '您已注册成为客服，请不要重复注册');
+            res.send(responseMsg.toXML());
+          }else{
+            kefuList.push(msg.FromUserName);
+            
+            var responseMsg = msg.makeResponseMessage('text', '您已成功注册成为客服');
+            res.send(responseMsg.toXML());
+          }
+        }else if( msg.isEndSessionCommand() ){
+          if ( user in currentSessions ){
+            var session = currentSessions[user]
+              , client = session.client
+              , kefu = session.kefu; 
+
+            delete currentSessions[client];
+            delete currentSessions[kefu];
+
+            //tell both to end session
+            var msgData = {
+                  'touser': [kefu],
+                  'msgtype': ['text'],
+                  'text': [{'content':'会话已结束'}]
+                };
+            var msg1 = new WeixinMessage(msgData);
+            msgData.touser = [client];
+            var msg2 = new WeixinMessage(msgData);
+            msg1.sendThroughKefuInterface(ACCESSTOKEN);msg2.sendThroughKefuInterface(ACCESSTOKEN);
+
+            
+            if ( msgQueue.length>0){
+              var waitMsg = msgQueue[0];
+
+              if ( waitMsg.MsgType != 'kefu' ){
+                console.log('thre\'s a match and needa forward the msg');
+
+                msgQueue = msgQueue.slice(1);
+                var newClient = waitMsg.FromUserName;
+                currentSessions[newClient] = currentSessions[kefu] = {'client':newClient, 'kefu':kefu};
+
+                //TODO: send client message to kefu
+                var msgData;
+                if (waitMsg.MsgType === 'text'){
+                  msgData = {
+                    'touser': [kefu],
+                    'msgtype': ['text'],
+                    'text': [{'content':waitMsg.Content}]
+                  };
+                }else if (waitMsg.MsgType === 'image'){
+
+                  msgData = {
+                    'touser': [kefu],
+                    'msgtype': [waitMsg.MsgType],
+                    'image': [{'media_id': waitMsg.MediaId}]
+                  };
+                }else if (waitMsg.MsgType === 'voice'){
+                  msgData = {
+                    'touser': [kefu],
+                    'msgtype': [waitMsg.MsgType],
+                    'voice': [{'media_id': waitMsg.MediaId}]
+                  }
+                }
+                console.log(msgData);
+                var forwardMsg = new WeixinMessage(msgData);
+                forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
+                return;
+              }
+            }
+
+          }else{
+            res.send(msg.makeResponseMessage('text', '您没有在任何会话里').toXML());
+          }
         }
+
         return;
       }else if ( kefuList.indexOf(msg.FromUserName)>-1 && msg.isKefuCommand()){
         console.log('是客服而且是客服命令');

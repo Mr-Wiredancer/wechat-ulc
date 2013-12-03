@@ -35,8 +35,15 @@ WeixinMessage.prototype.toFormatJSON = function(){
 };
 
 WeixinMessage.prototype.isSystemCommand = function(){
-	var pattern = /^register31415926$/; //register as kefu
-	return pattern.test(this.Content);
+	return this.isRegisterCommand() || this.isEndSessionCommand();
+};
+
+WeixinMessage.prototype.isEndSessionCommand = function(){
+	return /^结束对话$/.test(this.Content);
+};
+
+WeixinMessage.prototype.isRegisterCommand = function(){
+	return /^register31415926$/.test(this.Content);
 };
 
 WeixinMessage.prototype.sendThroughKefuInterface = function(token){
