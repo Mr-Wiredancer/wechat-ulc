@@ -39,7 +39,7 @@ WeixinMessage.prototype.isSystemCommand = function(){
 };
 
 WeixinMessage.prototype.isEndSessionCommand = function(){
-	return /^结束对话$/.test(this.Content);
+	return /^endsession$/.test(this.Content);
 };
 
 WeixinMessage.prototype.isRegisterCommand = function(){
