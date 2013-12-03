@@ -213,9 +213,8 @@ exports.post = function(req, res){
           console.log(forwardMsg);
           forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
           return;
-        }
+        } 
       }else{
-
       }
 
   	});
