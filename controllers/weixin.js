@@ -74,7 +74,7 @@ exports.post = function(req, res){
             var msgData = {
                   'touser': [kefu],
                   'msgtype': ['text'],
-                  'text': [{'content':'会话已结束'}]
+                  'text': [{'content':"end of session"}]
                 };                  
 
             var msg1 = new WeixinMessage(msgData);
@@ -84,24 +84,25 @@ exports.post = function(req, res){
             var msg2 = new WeixinMessage(msgData);
             console.log('msg2');
             console.log(msg2);
-            msg1.sendThroughKefuInterface(ACCESSTOKEN);msg2.sendThroughKefuInterface(ACCESSTOKEN);
+            msg1.sendThroughKefuInterface(ACCESSTOKEN);
+            // msg2.sendThroughKefuInterface(ACCESSTOKEN);
 
-            console.log('should not reach here');
-            if ( msgQueue.length>0){
-              var waitMsg = msgQueue[0];
+            // console.log('should not reach here');
+            // if ( msgQueue.length>0){
+            //   var waitMsg = msgQueue[0];
 
-              if ( waitMsg.MsgType != 'kefu' ){
-                console.log('thre\'s a match and needa forward the msg');
+            //   if ( waitMsg.MsgType != 'kefu' ){
+            //     console.log('thre\'s a match and needa forward the msg');
 
-                msgQueue = msgQueue.slice(1);
-                var newClient = waitMsg.FromUserName;
-                currentSessions[newClient] = currentSessions[kefu] = {'client':newClient, 'kefu':kefu};
+            //     msgQueue = msgQueue.slice(1);
+            //     var newClient = waitMsg.FromUserName;
+            //     currentSessions[newClient] = currentSessions[kefu] = {'client':newClient, 'kefu':kefu};
 
-                //TODO: send client message to kefu
-                forwardMsg(waitMsg, kefu);
+            //     //TODO: send client message to kefu
+            //     forwardMsg(waitMsg, kefu);
 
-              }
-            }
+            //   }
+            // }
 
           }else{
             res.send(msg.makeResponseMessage('text', '您没有在任何会话里').toXML());
