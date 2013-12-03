@@ -204,12 +204,15 @@ exports.post = function(req, res){
         forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
         return;
       }else if( kefuList.indexOf(msg.FromUserName)<0 ){
+
         console.log('客户信息');
         console.log(msgQueue);
+
         if (msgQueue.length === 0 || msgQueue[0].MsgType!='kefu' ){
           console.log('没有客服');
           msgQueue.push(msg);
           res.send(msg.makeResponseMessage('text', '暂时没有在线的客服，请耐心等候').toXML());
+
         } else {
           console.log('有客服，转发');  
           var kefuMsg = msgQueue.shift();
@@ -255,6 +258,7 @@ exports.post = function(req, res){
 }
 
 var forwardMsg = function (fromMsg, toUserName){
+  console.log('forward msg starts');
   var msgData
     , msgType = fromMsg.MsgType;
 
@@ -279,8 +283,10 @@ var forwardMsg = function (fromMsg, toUserName){
     }
   }
 
+  console.log('1');
   var forwardMsg = new WeixinMessage(msgData);
   forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
+  console.log('before return');
   return;
 }
 
