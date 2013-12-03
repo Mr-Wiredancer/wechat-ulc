@@ -99,7 +99,6 @@ exports.post = function(req, res){
                 currentSessions[newClient] = currentSessions[kefu] = {'client':newClient, 'kefu':kefu};
 
                 //TODO: send client message to kefu
-                console.log(waitMsg);
                 forwardMsg(waitMsg, kefu);
                 return
               }
@@ -218,6 +217,8 @@ exports.post = function(req, res){
           var kefu = kefuMsg.FromUserName;
           currentSessions[client] = currentSessions[kefu] = {'client':client, 'kefu':kefu};
 
+          console.log('client message and kefu ID');
+          console.log(msg); console.log(kefu);
           forwardMsg(msg, kefu);
           // var msgData;
           // if (msg.MsgType === 'text'){
