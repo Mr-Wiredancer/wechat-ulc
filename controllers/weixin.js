@@ -86,7 +86,7 @@ exports.post = function(req, res){
             console.log(msg2);
             msg1.sendThroughKefuInterface(ACCESSTOKEN);msg2.sendThroughKefuInterface(ACCESSTOKEN);
 
-            
+            console.log('should not reach here');
             if ( msgQueue.length>0){
               var waitMsg = msgQueue[0];
 
