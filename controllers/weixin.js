@@ -214,7 +214,6 @@ exports.post = function(req, res){
           forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
           return;
         }
-
       }else{
 
       }
