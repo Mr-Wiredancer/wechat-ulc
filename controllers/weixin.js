@@ -61,6 +61,7 @@ exports.post = function(req, res){
             res.send(responseMsg.toXML());
           }
         }else if( msg.isEndSessionCommand() ){
+          console.log('收到结束对话请求');
           if ( user in currentSessions ){
             var session = currentSessions[user]
               , client = session.client
@@ -92,31 +93,32 @@ exports.post = function(req, res){
                 currentSessions[newClient] = currentSessions[kefu] = {'client':newClient, 'kefu':kefu};
 
                 //TODO: send client message to kefu
-                var msgData;
-                if (waitMsg.MsgType === 'text'){
-                  msgData = {
-                    'touser': [kefu],
-                    'msgtype': ['text'],
-                    'text': [{'content':waitMsg.Content}]
-                  };
-                }else if (waitMsg.MsgType === 'image'){
+                forwardMsg(waitMsg, kefu);
+                // var msgData;
+                // if (waitMsg.MsgType === 'text'){
+                //   msgData = {
+                //     'touser': [kefu],
+                //     'msgtype': ['text'],
+                //     'text': [{'content':waitMsg.Content}]
+                //   };
+                // }else if (waitMsg.MsgType === 'image'){
 
-                  msgData = {
-                    'touser': [kefu],
-                    'msgtype': [waitMsg.MsgType],
-                    'image': [{'media_id': waitMsg.MediaId}]
-                  };
-                }else if (waitMsg.MsgType === 'voice'){
-                  msgData = {
-                    'touser': [kefu],
-                    'msgtype': [waitMsg.MsgType],
-                    'voice': [{'media_id': waitMsg.MediaId}]
-                  }
-                }
-                console.log(msgData);
-                var forwardMsg = new WeixinMessage(msgData);
-                forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
-                return;
+                //   msgData = {
+                //     'touser': [kefu],
+                //     'msgtype': [waitMsg.MsgType],
+                //     'image': [{'media_id': waitMsg.MediaId}]
+                //   };
+                // }else if (waitMsg.MsgType === 'voice'){
+                //   msgData = {
+                //     'touser': [kefu],
+                //     'msgtype': [waitMsg.MsgType],
+                //     'voice': [{'media_id': waitMsg.MediaId}]
+                //   }
+                // }
+                // console.log(msgData);
+                // var forwardMsg = new WeixinMessage(msgData);
+                // forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
+                // return;
               }
             }
 
@@ -145,31 +147,33 @@ exports.post = function(req, res){
               currentSessions[client] = currentSessions[kefu] = {'client':client, 'kefu':kefu};
 
               //TODO: send client message to kefu
-              var msgData;
-              if (waitMsg.MsgType === 'text'){
-                msgData = {
-                  'touser': [kefu],
-                  'msgtype': ['text'],
-                  'text': [{'content':waitMsg.Content}]
-                };
-              }else if (waitMsg.MsgType === 'image'){
 
-                msgData = {
-                  'touser': [kefu],
-                  'msgtype': [waitMsg.MsgType],
-                  'image': [{'media_id': waitMsg.MediaId}]
-                };
-              }else if (waitMsg.MsgType === 'voice'){
-                msgData = {
-                  'touser': [kefu],
-                  'msgtype': [waitMsg.MsgType],
-                  'voice': [{'media_id': waitMsg.MediaId}]
-                }
-              }
-              console.log(msgData);
-              var forwardMsg = new WeixinMessage(msgData);
-              forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
-              return;
+              forwardMsg(waitMsg, kefu);
+              // var msgData;
+              // if (waitMsg.MsgType === 'text'){
+              //   msgData = {
+              //     'touser': [kefu],
+              //     'msgtype': ['text'],
+              //     'text': [{'content':waitMsg.Content}]
+              //   };
+              // }else if (waitMsg.MsgType === 'image'){
+
+              //   msgData = {
+              //     'touser': [kefu],
+              //     'msgtype': [waitMsg.MsgType],
+              //     'image': [{'media_id': waitMsg.MediaId}]
+              //   };
+              // }else if (waitMsg.MsgType === 'voice'){
+              //   msgData = {
+              //     'touser': [kefu],
+              //     'msgtype': [waitMsg.MsgType],
+              //     'voice': [{'media_id': waitMsg.MediaId}]
+              //   }
+              // }
+              // console.log(msgData);
+              // var forwardMsg = new WeixinMessage(msgData);
+              // forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
+              // return;
             }
           
             var m = new WeixinMessage({'FromUserName':[msg.FromUserName], 'MsgType': ['kefu']});
@@ -287,6 +291,36 @@ exports.post = function(req, res){
   	});
   });
 
+}
+
+var forwardMsg = function (fromMsg, toUserName){
+  var msgData
+    , msgType = fromMsg.MsgType;
+
+  if (msgType === 'text'){
+    msgData = {
+      'touser': [toUserName],
+      'msgtype': ['text'],
+      'text': [{'content':fromMsg.Content}]
+    };
+  }else if (msgType === 'image'){
+
+    msgData = {
+      'touser': [toUserName],
+      'msgtype': ['image'],
+      'image': [{'media_id': fromMsg.MediaId}]
+    };
+  }else if (msgType === 'voice'){
+    msgData = {
+      'touser': [toUserName],
+      'msgtype': ['voice'],
+      'voice': [{'media_id': fromMsg.MediaId}]
+    }
+  }
+
+  var forwardMsg = new WeixinMessage(msgData);
+  forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
+  return;
 }
 
 var deleteMsgFromQueue = function(kefuID){
