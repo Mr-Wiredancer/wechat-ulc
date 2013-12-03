@@ -220,8 +220,6 @@ exports.post = function(req, res){
           var kefu = kefuMsg.FromUserName;
           currentSessions[client] = currentSessions[kefu] = {'client':client, 'kefu':kefu};
 
-          console.log('client message and kefu ID');
-          console.log(msg); console.log(kefu);
           forwardMsg(msg, kefu);
           // var msgData;
           // if (msg.MsgType === 'text'){
@@ -284,8 +282,8 @@ var forwardMsg = function (fromMsg, toUserName){
   }
 
   console.log('1');
-  var forwardMsg = new WeixinMessage(msgData);
-  forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
+  var m = new WeixinMessage(msgData);
+  m.sendThroughKefuInterface(ACCESSTOKEN);
   console.log('before return');
   return;
 }
