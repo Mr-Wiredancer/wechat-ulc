@@ -266,7 +266,7 @@ var forwardMsgTo = function (fromMsg, toUserName){
     msgData = {
       'touser': [toUserName],
       'msgtype': ['text'],
-      'text': [{'content':fromMsg.Content}]
+      'text': [{'content':escape(fromMsg.Content)}]
     };
   }else if (msgType === 'image'){
 
