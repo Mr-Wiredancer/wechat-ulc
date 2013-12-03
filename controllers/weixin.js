@@ -175,10 +175,14 @@ exports.post = function(req, res){
         forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
         return;
       }else if( kefuList.indexOf(msg.FromUserName)<0 ){
+        console.log('客户信息');
+        console.log(msgQueue);
         if (msgQueue.length === 0 || msgQueue[0].MsgType!='kefu' ){
+          console.log('没有客服');
           msgQueue.push(msg);
           res.send(msg.makeResponseMessage('text', '暂时没有在线的客服，请耐心等候'));
         } else {
+          console.log('有客服，转发');
           var kefuMsg = msgQueue.shift();
           var client = msg.FromUserName;
           var kefu = kefuMsg.FromUserName;
