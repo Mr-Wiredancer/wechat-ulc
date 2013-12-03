@@ -182,7 +182,7 @@ exports.post = function(req, res){
           msgQueue.push(msg);
           res.send(msg.makeResponseMessage('text', '暂时没有在线的客服，请耐心等候'));
         } else {
-          console.log('有客服，转发');
+          console.log('有客服，转发');  
           var kefuMsg = msgQueue.shift();
           var client = msg.FromUserName;
           var kefu = kefuMsg.FromUserName;
@@ -210,6 +210,7 @@ exports.post = function(req, res){
             }
           }        
           var forwardMsg = new WeixinMessage(msgData);
+          console.log(forwardMsg);
           forwardMsg.sendThroughKefuInterface(ACCESSTOKEN);
           return;
         }
