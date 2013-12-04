@@ -10,6 +10,6 @@
     "jade": "*",
     "js2xml": "*",
     "xml2js": "*",
-    "requestify": "*"
+    "requestify": "git://github.com/ranm8/requestify.git#v0.2.0"
   }
 }
