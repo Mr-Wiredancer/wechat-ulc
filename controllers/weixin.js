@@ -52,12 +52,12 @@ exports.post = function(req, res){
 
         if (msg.isRegisterCommand()){
           if (kefuList.indexOf(user)>-1){
-            var responseMsg = msg.makeResponseMessage('text', '您已注册成为客服，请不要重复注册');
+            var responseMsg = msg.makeResponseMessage('text', '[SYS]您已注册成为客服，请不要重复注册');
             res.send(responseMsg.toXML());
           }else{
             kefuList.push(msg.FromUserName);
             
-            var responseMsg = msg.makeResponseMessage('text', '您已成功注册成为客服');
+            var responseMsg = msg.makeResponseMessage('text', '[SYS]您已成功注册成为客服');
             res.send(responseMsg.toXML());
           }
         }else if( msg.isEndSessionCommand() ){
@@ -74,7 +74,7 @@ exports.post = function(req, res){
             var msgData = {
                   'touser': [kefu],
                   'msgtype': ['text'],
-                  'text': [{'content':"end of session"}]
+                  'text': [{'content':"[SYS]end of session"}]
                 };                  
 
             var msg1 = new WeixinMessage(msgData);
@@ -107,13 +107,13 @@ exports.post = function(req, res){
             msgQueue.push(new WeixinMessage({'FromUserName':[kefu], 'MsgType': ['kefu']}));
 
           }else{
-            res.send(msg.makeResponseMessage('text', '您没有在任何会话里').toXML());
+            res.send(msg.makeResponseMessage('text', '[SYS]您没有在任何会话里').toXML());
           }
         }else if(msg.isResetCommand()){
           msgQueue = [];
           kefuList = [];
           currentSessions = {};
-          res.send(msg.makeResponseMessage('text', '全部清除').toXML());
+          res.send(msg.makeResponseMessage('text', '[SYS]全部清除').toXML());
         }
 
         return;
@@ -141,16 +141,16 @@ exports.post = function(req, res){
           
             var m = new WeixinMessage({'FromUserName':[msg.FromUserName], 'MsgType': ['kefu']});
             msgQueue.push(m);
-            res.send(msg.makeResponseMessage('text', '暂时没有在等待的客户，请耐心等候').toXML());
+            res.send(msg.makeResponseMessage('text', '[SYS]暂时没有在等待的客户，请耐心等候').toXML());
             return;
 
           }else{
             if (msgQueue.length === 0){
               var m = new WeixinMessage({'FromUserName':[msg.FromUserName], 'MsgType': ['kefu']});
               msgQueue.push(m);
-              res.send(msg.makeResponseMessage('text', '暂时没有在等待的客户，请耐心等候').toXML());
+              res.send(msg.makeResponseMessage('text', '[SYS]暂时没有在等待的客户，请耐心等候').toXML());
             }else{
-              res.send(msg.makeResponseMessage('text', '你已经在工作中，不需要重复打卡').toXML());
+              res.send(msg.makeResponseMessage('text', '[SYS]你已经在工作中，不需要重复打卡').toXML());
             }
             return;
           }
@@ -159,11 +159,11 @@ exports.post = function(req, res){
           var kefu = msg.FromUserName;
           if (isInMsgQueue(kefu)){
             deleteMsgFromQueue(kefu);
-            res.send(msg.makeResponseMessage('text', '下班').toXML());
+            res.send(msg.makeResponseMessage('text', '[SYS]下班').toXML());
           }else if (kefu in currentSessions) {
-            res.send(msg.makeResponseMessage('text', '请结束与当前用户的对话后再下班').toXML());
+            res.send(msg.makeResponseMessage('text', '[SYS]请结束与当前用户的对话后再下班').toXML());
           }else{
-            res.send(msg.makeResponseMessage('text', '你还没打卡上班').toXML());
+            res.send(msg.makeResponseMessage('text', '[SYS]你还没打卡上班').toXML());
           }
           return;
         }
@@ -193,7 +193,7 @@ exports.post = function(req, res){
         if (msgQueue.length === 0 || msgQueue[0].MsgType!='kefu' ){
           console.log('没有客服');
           msgQueue.push(msg);
-          res.send(msg.makeResponseMessage('text', '暂时没有在线的客服，请耐心等候').toXML());
+          res.send(msg.makeResponseMessage('text', '[SYS]暂时没有在线的客服，请耐心等候').toXML());
 
         } else {
           console.log('有客服，转发');  
