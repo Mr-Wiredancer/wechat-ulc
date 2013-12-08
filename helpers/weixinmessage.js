@@ -47,7 +47,7 @@ WeixinMessage.prototype.isEndSessionCommand = function(){
 };
 
 WeixinMessage.prototype.isRegisterCommand = function(){
-	return /^register31415926$/.test(this.Content);
+	return /^注册$/.test(this.Content);
 };
 
 WeixinMessage.prototype.sendThroughKefuInterface = function(token){
