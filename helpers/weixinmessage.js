@@ -4,6 +4,7 @@ var TEXTTYPE = 'text'
 	, LOCATIONTYPE = 'location'
 	, IMAGETYPE = 'image'
 	, requestify = require('requestify')
+	, Log = require('../models/log.js')
     , Js2Xml = require('js2xml').Js2Xml;
 
 
@@ -51,9 +52,15 @@ WeixinMessage.prototype.isRegisterCommand = function(){
 };
 
 WeixinMessage.prototype.sendThroughKefuInterface = function(token){
+	this.log();
 	requestify.post('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='+token, this);
 	return;
-}
+};
+
+WeixinMessage.prototype.log = function(){
+	var l = new Log({content_json:this.toFormatJSON()});
+	l.save();
+};
 
 WeixinMessage.prototype.isKefuCommand = function(){
 	return this.isKefuStartCommand() || this.isKefuEndCommand();
@@ -80,6 +87,7 @@ WeixinMessage.prototype.makeResponseMessage = function(type, content){
 		msg.MediaId = content;
 	}
 
+	this.log();
 	return msg;
 };
 
