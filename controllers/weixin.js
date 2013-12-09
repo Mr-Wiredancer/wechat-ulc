@@ -74,7 +74,7 @@ exports.post = function(req, res){
             var msgData = {
                   'touser': [kefu],
                   'msgtype': ['text'],
-                  'text': [{'content':"[SYS]end of session"}]
+                  'text': [{'content':"[SYS]会话结束"}]
                 };                  
 
             var msg1 = new WeixinMessage(msgData);
@@ -87,7 +87,7 @@ exports.post = function(req, res){
             msg1.sendThroughKefuInterface(ACCESSTOKEN);
             msg2.sendThroughKefuInterface(ACCESSTOKEN);
 
-            console.log('should not reach here');
+            // console.log('should not reach here');
             if ( msgQueue.length>0){
               var waitMsg = msgQueue[0];
 
@@ -99,6 +99,14 @@ exports.post = function(req, res){
                 currentSessions[newClient] = currentSessions[kefu] = {'client':newClient, 'kefu':kefu};
 
                 //TODO: send client message to kefu
+                var notifData = {
+                  'touser': [kefu],
+                  'msgtype': ['text'],
+                  'text': [{'content':"[SYS]开始与下一位客户对话"}]
+                };
+                var notif = new WeixinMessageM（notifData）;
+                notif.sendThroughKefuInterface(ACCESSTOKEN);
+
                 forwardMsgTo(waitMsg, kefu);
                 return
               }
@@ -135,6 +143,13 @@ exports.post = function(req, res){
               var client = waitMsg.FromUserName;
               currentSessions[client] = currentSessions[kefu] = {'client':client, 'kefu':kefu};
 
+              var notifData = {
+                'touser': [kefu],
+                'msgtype': ['text'],
+                'text': [{'content':"[SYS]开始与下一位客户对话"}]
+              };
+              var notif = new WeixinMessageM（notifData）;
+              notif.sendThroughKefuInterface(ACCESSTOKEN);
               //TODO: send client message to kefu
               forwardMsgTo(waitMsg, kefu);
             }
@@ -159,7 +174,7 @@ exports.post = function(req, res){
           var kefu = msg.FromUserName;
           if (isInMsgQueue(kefu)){
             deleteMsgFromQueue(kefu);
-            res.send(msg.makeResponseMessage('text', '[SYS]下班').toXML());
+            res.send(msg.makeResponseMessage('text', '[SYS]已下班').toXML());
           }else if (kefu in currentSessions) {
             res.send(msg.makeResponseMessage('text', '[SYS]请结束与当前用户的对话后再下班').toXML());
           }else{
@@ -201,6 +216,14 @@ exports.post = function(req, res){
           var client = msg.FromUserName;
           var kefu = kefuMsg.FromUserName;
           currentSessions[client] = currentSessions[kefu] = {'client':client, 'kefu':kefu};
+
+          var notifData = {
+            'touser': [kefu],
+            'msgtype': ['text'],
+            'text': [{'content':"[SYS]开始与下一位客户对话"}]
+          };
+          var notif = new WeixinMessageM（notifData）;
+          notif.sendThroughKefuInterface(ACCESSTOKEN);
 
           forwardMsgTo(msg, kefu);
           return;

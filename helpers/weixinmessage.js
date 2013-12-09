@@ -43,7 +43,7 @@ WeixinMessage.prototype.isSystemCommand = function(){
 };
 
 WeixinMessage.prototype.isEndSessionCommand = function(){
-	return /^endsession$/.test(this.Content);
+	return /^结束会话$/.test(this.Content);
 };
 
 WeixinMessage.prototype.isRegisterCommand = function(){
@@ -60,11 +60,11 @@ WeixinMessage.prototype.isKefuCommand = function(){
 };
 
 WeixinMessage.prototype.isKefuStartCommand = function(){
-	return /^beginwork$/.test(this.Content);
+	return /^上班$/.test(this.Content);
 }
 
 WeixinMessage.prototype.isKefuEndCommand = function(){
-	return /^endwork$/.test(this.Content);
+	return /^下班$/.test(this.Content);
 }
 
 WeixinMessage.prototype.makeResponseMessage = function(type, content){
