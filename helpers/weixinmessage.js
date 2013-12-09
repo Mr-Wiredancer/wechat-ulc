@@ -88,6 +88,7 @@ WeixinMessage.prototype.makeResponseMessage = function(type, content){
 	}
 
 	this.log();
+
 	return msg;
 };
 
