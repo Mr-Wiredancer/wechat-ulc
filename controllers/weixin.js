@@ -104,7 +104,7 @@ exports.post = function(req, res){
                   'msgtype': ['text'],
                   'text': [{'content':"[SYS]开始与下一位客户对话"}]
                 };
-                var notif = new WeixinMessageM（notifData）;
+                var notif = new WeixinMessage(notifData);
                 notif.sendThroughKefuInterface(ACCESSTOKEN);
 
                 forwardMsgTo(waitMsg, kefu);
@@ -148,7 +148,7 @@ exports.post = function(req, res){
                 'msgtype': ['text'],
                 'text': [{'content':"[SYS]开始与下一位客户对话"}]
               };
-              var notif = new WeixinMessageM（notifData）;
+              var notif = new WeixinMessage(notifData);
               notif.sendThroughKefuInterface(ACCESSTOKEN);
               //TODO: send client message to kefu
               forwardMsgTo(waitMsg, kefu);
@@ -222,7 +222,7 @@ exports.post = function(req, res){
             'msgtype': ['text'],
             'text': [{'content':"[SYS]开始与下一位客户对话"}]
           };
-          var notif = new WeixinMessageM（notifData）;
+          var notif = new WeixinMessage(notifData);
           notif.sendThroughKefuInterface(ACCESSTOKEN);
 
           forwardMsgTo(msg, kefu);
