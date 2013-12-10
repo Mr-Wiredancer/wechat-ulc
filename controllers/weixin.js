@@ -45,6 +45,7 @@ exports.post = function(req, res){
   		var xml = result.xml
   			, msg = new WeixinMessage(xml);
 
+        console.log(msg);
       if ( msg.isSystemCommand() ){
         //currently system command is to register current user as kefu
         console.log('system command');
