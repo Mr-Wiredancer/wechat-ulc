@@ -3,6 +3,6 @@ var mongoose = require('./model.js')
 
 var logSchema = new Schema({
 	content_json: String
-}, {capped: true, size:8000000});
+}, {capped: true});
 
 module.exports = mongoose.model('Log', logSchema);
