@@ -1,20 +1,19 @@
+var requestify = require('requestify')
+	, Log = require('../models/log.js')
+    , Js2Xml = require('js2xml').Js2Xml;
+
+//useful constants
 var TEXTTYPE = 'text'
 	, VOICETYPE = 'voice'
 	, VIDEOTYPE = 'video'
 	, LOCATIONTYPE = 'location'
-	, IMAGETYPE = 'image'
-	, requestify = require('requestify')
-	, Log = require('../models/log.js')
-    , Js2Xml = require('js2xml').Js2Xml;
+	, LINKTYPE = 'link'
+	, EVENTYPE = 'event'
+	, IMAGETYPE = 'image';
 
 
 var WeixinMessage = function(data){
 	for (var key in data){
-		// if (key === 'MsgId' || key === 'CreateTime' || key === 'Location_X' || key === 'Location_Y' || key === 'Scale' ){
-		// 	this[key] = data[key];
-		// }else{
-		// 	this[key] = data[key][0];
-		// }
 		this[key] = data[key][0];
 	}
 };
@@ -27,15 +26,66 @@ WeixinMessage.prototype.isVoice = function(){
 	return this.MsgType === VOICETYPE;
 };
 
+WeixinMessage.prototype.isRecognizedVoiced = function(){
+	return this.isVoice() && this.Recognition;
+};
+
 WeixinMessage.prototype.isImage = function(){
 	return this.MsgType === IMAGETYPE;
 };
+
+WeixinMessage.prototype.Video = function(){
+	return this.MsgType === VIDEOTYPE;
+};
+
+WeixinMessage.prototype.isEvent = function(){
+	return this.MsgType === EVENTYPE;
+};
+
+WeixinMessage.prototype.isLink = function(){
+	return this.MsgType === LINKTYPE;
+};
+
+WeixinMessage.prototype.isLocation = function(){
+	return this.MsgType === LOCATIONTYPE;
+};
+
+//event type
+WeixinMessage.prototype.isSubscribeEvent = function(){
+	return this.isEvent() && this.Event === 'subscribe';
+};
+
+WeixinMessage.prototype.isPureSubscribeEvent = function(){
+	return this.isSubscribeEvent && !this.EventKey;
+};
+
+WeixinMessage.prototype.isUnsubscribeEvent = WeixinMessage.prototype.isPureUnsubscribeEvent = function(){
+	return this.isEvent() && this.Event === 'unsubscribe';
+};
+
+WeixinMessage.prototype.isScanBeforeSubscribeEvent = function(){
+	return this.isSubscribeEvent() && this.EventKey && this.Ticket;
+};
+
+WeixinMessage.prototype.isScanAfterSubscribeEvent = function(){
+	return this.isEvent() && this.Event === 'scan' && this.EventKey && this.Ticket;
+};
+
+WeixinMessage.prototype.isLocationEvent = function(){
+	return this.isEvent() && this.Event === 'LOCATION';
+};
+
+WeixinMessage.prototype.isClickEvent = function(){
+	return this.isEvent() && this.Event === 'CLICK';
+};
+
 
 WeixinMessage.prototype.toXML = function(){
 	var result = new Js2Xml('xml', this);
 	return result.toString();
 };
 
+//seems redundant
 WeixinMessage.prototype.toFormatJSON = function(){
 	return JSON.stringify(this);
 };
@@ -57,7 +107,6 @@ WeixinMessage.prototype.isRegisterCommand = function(){
 };
 
 WeixinMessage.prototype.sendThroughKefuInterface = function(token){
-	this.log();
 	requestify.post('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='+token, this);
 	return;
 };
@@ -79,6 +128,7 @@ WeixinMessage.prototype.isKefuEndCommand = function(){
 	return /^下班$/.test(this.Content);
 }
 
+//automatic response to an incoming message. return a new WeixinMessage object. 
 WeixinMessage.prototype.makeResponseMessage = function(type, content){
 	var msg = new WeixinMessage();
 	msg.FromUserName = this.ToUserName;
@@ -91,8 +141,6 @@ WeixinMessage.prototype.makeResponseMessage = function(type, content){
 	}else if (type === IMAGETYPE || type === VOICETYPE){
 		msg.MediaId = content;
 	}
-
-	this.log();
 
 	return msg;
 };

@@ -6,10 +6,10 @@ mongoose.connect(uristring, function(err, res){
   		console.log ('ERROR connecting to: ' + uristring + '. ' + err);
   	} else {
   		console.log ('Succeeded connected to: ' + uristring);
-  		mongoose.connection.collections['logs'].drop(function(err){
-  			if (!err) console.log('dropped logs collection');
-  			if (err) console.log(err);
-  		});
+  		// mongoose.connection.collections['logs'].drop(function(err){
+  		// 	if (!err) console.log('dropped logs collection');
+  		// 	if (err) console.log(err);
+  		// });
   	}
 });
 
