@@ -3,6 +3,7 @@ var mongoose = require('./model.js')
 
 var logSchema = new Schema({
 	content_json: String
-}, {capped: true});
+	_id: {type:ObjectId, index:{unique:true}}
+}, {capped: 8000000});
 
 module.exports = mongoose.model('Log', logSchema);
