@@ -10,7 +10,11 @@ var TEXTTYPE = 'text'
 
 var WeixinMessage = function(data){
 	for (var key in data){
-		this[key] = data[key][0];
+		if (key === 'MsgId' || key === 'CreateTime' || key === 'Location_X' || key === 'Location_Y' || key === 'Scale' || ){
+			this[key] = data[key];
+		}else{
+			this[key] = data[key][0];
+		}
 	}
 };
 
