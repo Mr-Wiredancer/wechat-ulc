@@ -53,16 +53,26 @@ exports.post = function(req, res){
 
         if (msg.isRegisterCommand()){
           // if (kefuList.indexOf(user)>-1){
-          if (msg.isFromStaff()){   
+          msg.checkIfFromStaff(function(){
             var responseMsg = msg.makeResponseMessage('text', '[SYS]您已注册成为客服，请不要重复注册');
             res.send(responseMsg.toXML());
-          }else{
-            kefuList.push(msg.FromUserName);
-            
-            msg.saveStaff();
-            var responseMsg = msg.makeResponseMessage('text', '[SYS]您已成功注册成为客服');
+          }, function(){
+            msg.addFromUserAsSatff(function(){
+              var responseMsg = msg.makeResponseMessage('text', '[SYS]您已成功注册成为客服');
             res.send(responseMsg.toXML());
-          }
+            });
+          });  
+
+          // if (msg.isFromStaff()){   
+          //   var responseMsg = msg.makeResponseMessage('text', '[SYS]您已注册成为客服，请不要重复注册');
+          //   res.send(responseMsg.toXML());
+          // }else{
+          //   kefuList.push(msg.FromUserName);
+            
+          //   msg.saveStaff();
+          //   var responseMsg = msg.makeResponseMessage('text', '[SYS]您已成功注册成为客服');
+          //   res.send(responseMsg.toXML());
+          // }
         }else if( msg.isEndSessionCommand() ){
           console.log('收到结束对话请求');
           if ( user in currentSessions ){
