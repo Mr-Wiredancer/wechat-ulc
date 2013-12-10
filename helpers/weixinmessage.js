@@ -126,9 +126,9 @@ WeixinMessage.prototype.checkIfFromStaff = function(cbIfTrue, cbIfFalse){
 	return Staff.findOne({openId: this.FromUserName}, 
 		function(err, staff){
 			if (staff){
-				cbIfFalse();
-			}else{
 				cbIfTrue();
+			}else{
+				cbIfFalse();
 			}
 	});
 };
