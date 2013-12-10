@@ -52,12 +52,14 @@ exports.post = function(req, res){
         var user = msg.FromUserName;
 
         if (msg.isRegisterCommand()){
-          if (kefuList.indexOf(user)>-1){
+          // if (kefuList.indexOf(user)>-1){
+          if (msg.isFromStaff()){   
             var responseMsg = msg.makeResponseMessage('text', '[SYS]您已注册成为客服，请不要重复注册');
             res.send(responseMsg.toXML());
           }else{
             kefuList.push(msg.FromUserName);
             
+            msg.saveStaff();
             var responseMsg = msg.makeResponseMessage('text', '[SYS]您已成功注册成为客服');
             res.send(responseMsg.toXML());
           }
@@ -262,8 +264,6 @@ var forwardMsgTo = function (fromMsg, toUserName){
       'voice': [{'media_id': fromMsg.MediaId}]
     }
   }
-
-  console.log('1');
   var m = new WeixinMessage(msgData);
   m.sendThroughKefuInterface(ACCESSTOKEN);
   console.log('before return');

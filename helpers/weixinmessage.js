@@ -1,5 +1,6 @@
 var requestify = require('requestify')
 	, Log = require('../models/log.js')
+	, Staff = require('../models/staff.js')
     , Js2Xml = require('js2xml').Js2Xml;
 
 //useful constants
@@ -115,6 +116,16 @@ WeixinMessage.prototype.log = function(){
 	var l = new Log({content_json:this.toFormatJSON()});
 	l.save();
 };
+
+WeixinMessage.prototype.saveStaff = function(){
+	var s = new Staff({openId: this.FromUserName});
+	s.save();
+};
+
+WeixinMessage.prototype.isFromStaff = function(){
+	return Staff.findOne({openId: this.FromUserName});
+};
+
 
 WeixinMessage.prototype.isKefuCommand = function(){
 	return this.isKefuStartCommand() || this.isKefuEndCommand();
