@@ -12,6 +12,7 @@ var WeixinMessage = function(data){
 	for (var key in data){
 		this[key] = data[key][0];
 	}
+	console.log(this);
 };
 
 WeixinMessage.prototype.isText = function(){
