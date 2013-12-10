@@ -126,12 +126,19 @@ WeixinMessage.prototype.checkIfFromStaff = function(cbIfTrue, cbIfFalse){
 	return Staff.findOne({openId: this.FromUserName}, 
 		function(err, staff){
 			if (staff){
+				console.log('it is from staff')
 				cbIfTrue();
 			}else{
+				console.log('it is not from staff');
 				cbIfFalse();
 			}
 	});
 };
+
+WeixinMessage.prototype.addFromUserAsStaff = function(cb){
+	var s = Staff.create({openId:this.FromUserName});
+	s.then(cb);
+}
 
 
 WeixinMessage.prototype.isKefuCommand = function(){
