@@ -57,9 +57,9 @@ exports.post = function(req, res){
             var responseMsg = msg.makeResponseMessage('text', '[SYS]您已注册成为客服，请不要重复注册');
             res.send(responseMsg.toXML());
           }, function(){
-            msg.addFromUserAsSatff(function(){
+            msg.addFromUserAsStaff(function(){
               var responseMsg = msg.makeResponseMessage('text', '[SYS]您已成功注册成为客服');
-            res.send(responseMsg.toXML());
+              res.send(responseMsg.toXML());
             });
           });  
 
