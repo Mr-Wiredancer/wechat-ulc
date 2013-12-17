@@ -2,7 +2,7 @@ var crypto = require('crypto')
   , TOKEN = 'dxhackers';
 
 var isValidWeixinRequest = function(signature, timestamp, nonce){
-  var arr = ['TOKEN', timestamp, nonce];
+  var arr = [TOKEN, timestamp, nonce];
   arr.sort();
 
   return crypto.createHash('sha1').update(arr.join('')).digest('hex') === signature;
