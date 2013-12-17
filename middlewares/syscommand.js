@@ -9,7 +9,7 @@ module.exports = function(req, res, next){
 		if (req.isFromStaff){
       		res.send(msg.makeResponseMessage('text', '[SYS]您已经是客服，请不要重复注册').toXML());
 		}else{
-			Staff.create({openId:req.weixinMessage.fromUserName}
+			Staff.create({openId:req.weixinMessage.FromUserName}
 				, function(err){
 					if (err){
 						//do something if it goes wrong
