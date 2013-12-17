@@ -29,10 +29,10 @@ updateAccessToken();
 setInterval(updateAccessToken, 7100*1000);
 
 exports.post = function(req, res){
-	if (!isValidWeixinRequest(req.query.signature, req.query.timestamp, req.query.nonce)){
-    res.send('You dont pass the validation'); //没有通过微信服务器的验证，可能是微信服务器出错或者恶意请求
-    return;
-  }
+	// if (!isValidWeixinRequest(req.query.signature, req.query.timestamp, req.query.nonce)){
+ //    res.send('You dont pass the validation'); //没有通过微信服务器的验证，可能是微信服务器出错或者恶意请求
+ //    return;
+ //  }
 
   var body = '';
 
@@ -305,7 +305,8 @@ var isInCurrentSession = function(msg){
 }
 
 //微信的服务器配置测试
-exports.test = function(req, res){
+exports.test = function(req, res, next){
+  console.log(next);
 	if ( isValidWeixinRequest(req.query.signature, req.query.timestamp, req.query.nonce)){
     res.send(req.query.echostr);
  	} 

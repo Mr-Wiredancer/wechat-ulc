@@ -3,20 +3,22 @@
  * Module dependencies.
  */
 
-var express = require('express');
-var routes = require('./routes');
-var user = require('./routes/user');
-var http = require('http');
-var path = require('path');
-
-var weixin = require('./controllers/weixin.js');
+var express = require('express')
+  , routes = require('./routes')
+  , user = require('./routes/user')
+  , http = require('http')
+  , path = require('path')
+  , weixinAuth = require('./middlewares/weixinauth.js')
+  , weixinMessageBuilder = require('./middlewares/weixinmessagebuilder.js')
+  , identityChecker = require('./middlewares/identitychecker.js')
+  , weixin = require('./controllers/weixin.js');
 
 var app = express();
 
-var uristring =
-process.env.MONGOLAB_URI ||
-process.env.MONGOHQ_URL ||
-'mongodb://localhost/HelloMongoose';
+// var uristring =
+// process.env.MONGOLAB_URI ||
+// process.env.MONGOHQ_URL ||
+// 'mongodb://localhost/HelloMongoose';
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -37,8 +39,10 @@ if ('development' == app.get('env')) {
 
 // app.get('/', routes.index);
 // app.get('/users', user.list);
+
 app.get('/weixin', weixin.test);
-app.post('/weixin', weixin.post);
+
+app.post('/weixin', [weixinAuth, weixinMessageBuilder, identityChecker],  weixin.post);
 
 
 http.createServer(app).listen(app.get('port'), function(){
