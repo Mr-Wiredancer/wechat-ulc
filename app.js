@@ -11,6 +11,7 @@ var express = require('express')
   , weixinAuth = require('./middlewares/weixinauth.js')
   , weixinMessageBuilder = require('./middlewares/weixinmessagebuilder.js')
   , identityChecker = require('./middlewares/identitychecker.js')
+  , sysCommandHandler = require('./middlewares/syscommand.js')
   , weixin = require('./controllers/weixin.js');
 
 var app = express();
@@ -42,7 +43,7 @@ if ('development' == app.get('env')) {
 
 app.get('/weixin', weixin.test);
 
-app.post('/weixin', [weixinAuth, weixinMessageBuilder, identityChecker],  weixin.post);
+app.post('/weixin', [weixinAuth, weixinMessageBuilder, identityChecker, sysCommandHandler],  weixin.post);
 
 
 http.createServer(app).listen(app.get('port'), function(){
