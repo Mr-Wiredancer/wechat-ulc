@@ -96,7 +96,8 @@ WeixinMessage.prototype.isResetCommand = function(){
 }
 
 WeixinMessage.prototype.isSystemCommand = function(){
-	return this.isRegisterCommand() || this.isResetCommand();
+	// return this.isRegisterCommand() || this.isResetCommand();
+	return this.isRegisterCommand();
 };
 
 WeixinMessage.prototype.isEndSessionCommand = function(){
@@ -104,7 +105,7 @@ WeixinMessage.prototype.isEndSessionCommand = function(){
 };
 
 WeixinMessage.prototype.isRegisterCommand = function(){
-	return /^:注册$/.test(this.Content);
+	return /^(!|！)注册$/.test(this.Content);
 };
 
 WeixinMessage.prototype.sendThroughKefuInterface = function(token){
