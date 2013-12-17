@@ -11,6 +11,7 @@ module.exports = function(req, res, next){
 	req.on('end', function(){
 		parseString(body, function(err, result){
 			if (err) {/*do something*/}
+			console.log('msg built');
 			req.weixinMessage = new WeixinMessage(result.xml);
 			next();	
 		});
