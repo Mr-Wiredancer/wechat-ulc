@@ -74,6 +74,7 @@ module.exports = function(app){
 
 		// ### menu click, used to start a new conversation if possible
 		if (msg.isStartConversationCommand()){ // menu is clicked
+			console.log('start converstaion comamnd');
 			if (msg.EventKey === 'MORE') next(); return;
 
 			var subject = msg.EventKey
@@ -166,6 +167,7 @@ module.exports = function(app){
 			}
 
 		}else if(msg.isEndConversationCommand()){
+			console.log('end conversation command');
 
 			if (user in ongoing) {
 				var otherUser = ongoing[user];
@@ -189,11 +191,14 @@ module.exports = function(app){
 			}
 		// ### normal messages, forward to staff if possible; 
 		}else if (msg.isNormalMessage()){
+			console.log('normal msg');
 			if (user in ongoing){
 				msg.forwardTo(app.get('ACCESSTOKEN'), ongoing[user], function(){});
 
 			}else next();		
+
 		}else{
+			console.log('nothing');
 			next();
 		}
 	};
