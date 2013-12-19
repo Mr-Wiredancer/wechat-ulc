@@ -163,7 +163,7 @@ module.exports = function(app){
 					deleteExistingClientFromQueues(user);
 
 					//DONT need to wait
-			g		if (hasAvailableStaff(subject)){
+					if (hasAvailableStaff(subject)){
 						var staff = Object.keys(staffs[subject]).pop();
 						delete staffs[subject][staff];
 
