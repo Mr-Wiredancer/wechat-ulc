@@ -9,24 +9,24 @@ var TOKEN = 'dxhackers'
   , APPID = 'wx07031480fe88fbf6' //TEST ACCOUNT
   // , APPSECRET = '6b02a04187dcc4567f0f683a5e081773'
   , APPSECRET = 'f73012337cad2ab2a8008cb27b54775c'
-  , ACCESSTOKEN = ''
-  , requestify = require('requestify')
+  // , ACCESSTOKEN = ''
+  // , requestify = require('requestify')
 	, WeixinMessage = require('../helpers/weixinmessage.js');
 
 
 //NOT A GOOD IDEA: update the accesstoken every 7100s (weixin's expires every 7200s)
-var updateAccessToken = function(){
-  requestify.get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='+APPID+'&secret='+APPSECRET).then(function(response){
-      var token = response.getBody()['access_token'];
-      console.log(response.getBody());
-      if (token){
-        ACCESSTOKEN = token;
-      }
-  });
-};
+// var updateAccessToken = function(){
+//   requestify.get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='+APPID+'&secret='+APPSECRET).then(function(response){
+//       var token = response.getBody()['access_token'];
+//       console.log(response.getBody());
+//       if (token){
+//         ACCESSTOKEN = token;
+//       }
+//   });
+// };
 
-updateAccessToken();
-setInterval(updateAccessToken, 7100*1000);
+// updateAccessToken();
+// setInterval(updateAccessToken, 7100*1000);
 
 exports.post = function(req, res){
 	// if (!isValidWeixinRequest(req.query.signature, req.query.timestamp, req.query.nonce)){

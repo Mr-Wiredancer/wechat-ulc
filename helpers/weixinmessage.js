@@ -35,7 +35,7 @@ WeixinMessage.prototype.isImage = function(){
 	return this.MsgType === IMAGETYPE;
 };
 
-WeixinMessage.prototype.Video = function(){
+WeixinMessage.prototype.isVideo = function(){
 	return this.MsgType === VIDEOTYPE;
 };
 
@@ -50,6 +50,10 @@ WeixinMessage.prototype.isLink = function(){
 WeixinMessage.prototype.isLocation = function(){
 	return this.MsgType === LOCATIONTYPE;
 };
+
+WeixinMessage.prototype.isNormalMessage = function(){
+	return this.isText() || this.isVoice() || this.isImage() || this.isVideo() || this.isLink() || this.isLocation();
+}
 
 //event type
 WeixinMessage.prototype.isSubscribeEvent = function(){
@@ -100,15 +104,58 @@ WeixinMessage.prototype.isSystemCommand = function(){
 	return this.isRegisterCommand();
 };
 
-WeixinMessage.prototype.isEndSessionCommand = function(){
-	return /^结束会话$/.test(this.Content);
+WeixinMessage.prototype.isStartConversationCommand = function(){
+	return this.isClickEvent() && this.EventKey!='MORE';
+}
+
+WeixinMessage.prototype.isEndConversationCommand = function(){
+	return /^(!|！)结束对话$/.test(this.Content);
 };
 
 WeixinMessage.prototype.isRegisterCommand = function(){
-	return /^(!|！)注册$/.test(this.Content);
+	return this.isText() && /^(!|！)注册$/.test(this.Content);
 };
 
-WeixinMessage.prototype.sendThroughKefuInterface = function(token){
+WeixinMessage.prototype.forwardTo = function(token, toUserName, cb){
+	var msgData;
+
+    if (this.isText()){
+		msgData = {
+			'touser': [toUserName],
+			'msgtype': ['text'],
+			'text': [{'content':this.Content}]
+		};
+	}else if (this.isImage()){
+
+		msgData = {
+			'touser': [toUserName],
+			'msgtype': ['image'],
+			'image': [{'media_id': this.MediaId}]
+		};
+	}else if (this.isVoice()){
+		msgData = {
+			'touser': [toUserName],
+			'msgtype': ['voice'],
+			'voice': [{'media_id': this.MediaId}]
+		}
+	}else if (this.isVideo()){
+		msgData = {
+			'touser': [toUserName],
+			'msgtype': ['voice'],
+			'video':[{
+				'media_id': this.MediaId,
+				'title': 'TITLE', //TODO: these are placeholders
+				'description': 'DESCRIPTION'
+			}]
+		}
+	}
+
+	var m = new WeixinMessage(msgData);
+	m.sendThroughKefuInterface(token, cb);
+	return;
+}
+
+WeixinMessage.prototype.sendThroughKefuInterface = function(token, cb){
 	requestify.post('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='+token, this);
 	return;
 };
