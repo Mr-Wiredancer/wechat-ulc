@@ -76,6 +76,16 @@ var deleteExistingStaffFromPools = function(staff){
 	};
 };
 
+//forward messages in order
+var forwardMessagesSync = function(token, user, messages){
+	console.log(messages.length);
+	if (messages.length = 0) return;
+
+	var msg = messages.shift();
+
+	msg.forward.forwardTo(token, user, function(){forwardMessagesSync(token, user, messages)});
+};
+
 module.exports = function(app){
 	
 	return function(req, res, next){
@@ -113,7 +123,11 @@ module.exports = function(app){
 						ongoing[client] = user;
 						ongoing[user] = client;
 
-						msg.makeResponseMessage('text', '[SYS]开始与学生对话').forwardTo(app.get('ACCESSTOKEN'), user);
+						msg.makeResponseMessage('text', '[SYS]开始与学生对话').forwardTo(app.get('ACCESSTOKEN'), user, function(){
+								for (var i =0; i<messages.length; i++){
+									messages[i].forwardTo(app.get('ACCESSTOKEN'), user);
+								}
+						});
 
 						var notif = new WeixinMessage({
 							'touser': [client],
@@ -123,15 +137,16 @@ module.exports = function(app){
 
 						notif.sendThroughKefuInterface(app.get('ACCESSTOKEN'));
 
-						for (var i =0; i<messages.length; i++){
-							messages[i].forwardTo(app.get('ACCESSTOKEN'), user);
-						}
+						// for (var i =0; i<messages.length; i++){
+						// 	messages[i].forwardTo(app.get('ACCESSTOKEN'), user);
+						// }
+						//forwardMessagesSync(app.get('ACCESSTOKEN'), user, messages);
 
 					//no match, add to pool	
 					}else{
 						console.log('enter queue');
 						staffs[subject][user] = {'info':'PLACEHOLDER'};
-						msg.makeResponseMessage('text', '[SYS]没有在等待的同学，你可以选择继续等待或另一个话题进行回答').forwardTo(app.get('ACCESSTOKEN'), user);
+						msg.makeResponseMessage('text', '[SYS]没有在等待'+subject+'答疑的同学，你可以选择继续等待或选择另一个话题进行回答').forwardTo(app.get('ACCESSTOKEN'), user);
 					}
 				}
 
@@ -148,7 +163,7 @@ module.exports = function(app){
 					deleteExistingClientFromQueues(user);
 
 					//DONT need to wait
-					if (hasAvailableStaff(subject)){
+			g		if (hasAvailableStaff(subject)){
 						var staff = Object.keys(staffs[subject]).pop();
 						delete staffs[subject][staff];
 
