@@ -75,7 +75,7 @@ module.exports = function(app){
 		// ### menu click, used to start a new conversation if possible
 		if (msg.isStartConversationCommand()){ // menu is clicked
 			console.log('start converstaion comamnd');
-			if (msg.EventKey === 'MORE') next(); return;
+			if (msg.EventKey === 'MORE'){ next(); return;}
 
 			var subject = msg.EventKey
 				, queue = queues[subject];
