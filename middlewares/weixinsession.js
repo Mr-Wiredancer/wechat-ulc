@@ -103,7 +103,7 @@ module.exports = function(app){
 						ongoing[client] = user;
 						ongoing[user] = client;
 
-						res.send(msg.makeResponseMessage('text', '[SYS]开始与学生对话'));
+						msg.makeResponseMessage('text', '[SYS]开始与学生对话').forwardTo(app.get('ACCESSTOKEN'), user);
 
 						var notif = new WeixinMessage({
 							'touser': [client],
@@ -145,10 +145,10 @@ module.exports = function(app){
 						ongoing[staff] = user;
 						ongoing[user] = staff;
 
-						res.send(msg.makeResponseMessage(
+						msg.makeResponseMessage(
 							'text', 
 							'[SYS]你可以开始跟老师交谈了'
-							).toXML());	
+							).forwardTo(app.get('ACCESSTOKEN'), user);	
 
 					//NEED to wait
 					}else{
@@ -161,10 +161,10 @@ module.exports = function(app){
 						});
 
 						//tell client how many waiting ahead
-						res.send(msg.makeResponseMessage(
+						msg.makeResponseMessage(
 							'text',
 							'[SYS]暂时没有空闲的老师来回答你的问题，你的前面还有'+(queues[subject].length-1)+'个同学在等待。在你等待的过程中你可以先把问题发上来^_^'
-							).toXML());
+							).forwardTo(app.get('ACCESSTOKEN'), user);
 
 					}
 				}
