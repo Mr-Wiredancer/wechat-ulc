@@ -42,8 +42,16 @@ var deleteExistingClientFromQueues = function(user){
 	}
 };
 
-var hasRequestFromStudent = function(user){
-
+var getPosOfClient = function(user){
+	for (var subject in queues){
+		var queue = queues[subject];
+		for (var i = 0; i<queue.length; i++){
+			if (queue[i]['user'] === user){
+				return {'queue':queue, 'index':i};
+			}
+		}
+	}
+	return null;
 };
 
 var isInSession = function(user){
@@ -158,7 +166,7 @@ module.exports = function(app){
 						//add an entry to the corresponding queue(make sure a user can only be in one queue and has only one entry)
 
 						queues[subject].push({
-							'user':'user',
+							'user':user,
 							'messages':[]
 						});
 
@@ -198,9 +206,12 @@ module.exports = function(app){
 		// ### normal messages, forward to staff if possible; 
 		}else if (msg.isNormalMessage()){
 			console.log('normal msg');
+			var pos = getPosOfClient(user);
 			if (user in ongoing){
 				msg.forwardTo(app.get('ACCESSTOKEN'), ongoing[user], function(){});
 
+			}else if(pos){
+				pos.queue[pos.index].messages.push(msg);
 			}else next();		
 
 		}else{
