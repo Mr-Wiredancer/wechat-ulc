@@ -191,7 +191,7 @@ module.exports = function(app){
 	            msg2.sendThroughKefuInterface(app.get('ACCESSTOKEN'));
 
 			} else {
-				res.send(msg.makeResponseMessage('text', '[SYS]你没有在任何对话中').toXML());
+				msg.makeResponseMessage('text', '[SYS]你没有在任何对话中').forwardTo(app.get('ACCESSTOKEN'), user);
 			}
 		// ### normal messages, forward to staff if possible; 
 		}else if (msg.isNormalMessage()){
