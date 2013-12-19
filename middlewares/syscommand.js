@@ -3,7 +3,7 @@ var Staff = require('../models/staff.js');
 module.exports = function(req, res, next){
 	var msg = req.weixinMessage
 	console.log(msg);
-	if (!msg.isSystemCommand()) next(); //isn't system command
+	if (!msg.isSystemCommand()) next(); return;//isn't system command
 
 	if (msg.isRegisterCommand()){
 		if (req.isFromStaff){
@@ -21,6 +21,6 @@ module.exports = function(req, res, next){
 				});
 		}
 	}else {
-		res.send(msg.makeResponseMessage('text', '[SYS]'+msg.toJSON()).toXML()); 
+		res.send(msg.makeResponseMessage('text', '[SYS]'+msg.toFormatJSON()).toXML()); 
 	}
 }

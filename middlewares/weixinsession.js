@@ -74,7 +74,7 @@ module.exports = function(app){
 
 		// ### menu click, used to start a new conversation if possible
 		if (msg.isStartConversationCommand()){ // menu is clicked
-			if (msg.EventKey === 'MORE') next();
+			if (msg.EventKey === 'MORE') next(); return;
 
 			var subject = msg.EventKey
 				, queue = queues[subject];
@@ -84,7 +84,7 @@ module.exports = function(app){
 				
 				/* ignore the command if staff is in session and send a start request*/
 				if (isInSession(user)){ 
-					next();
+					next(); return;
 
 				/* either idle or in a pool already. remove from existing queue if any; match stduent if any, otherwise add to new pool */	
 				}else {
@@ -125,7 +125,7 @@ module.exports = function(app){
 			}else{
 
 				if (isInSession(user)){
-					next();
+					next(); return;
 
 				/* either idle or in a queue already. remove from existing queue if any; match teacher if any, otherwise add to new queue */	
 				} else {
