@@ -124,9 +124,8 @@ module.exports = function(app){
 						ongoing[user] = client;
 
 						msg.makeResponseMessage('text', '[SYS]开始与学生对话').forwardTo(app.get('ACCESSTOKEN'), user, function(){
-								for (var i =0; i<messages.length; i++){
-									messages[i].forwardTo(app.get('ACCESSTOKEN'), user);
-								}
+								forwardMessagesSync(app.get('ACCESSTOKEN'), user, messages);
+
 						});
 
 						var notif = new WeixinMessage({
@@ -140,7 +139,7 @@ module.exports = function(app){
 						// for (var i =0; i<messages.length; i++){
 						// 	messages[i].forwardTo(app.get('ACCESSTOKEN'), user);
 						// }
-						//forwardMessagesSync(app.get('ACCESSTOKEN'), user, messages);
+						// forwardMessagesSync(app.get('ACCESSTOKEN'), user, messages);
 
 					//no match, add to pool	
 					}else{
