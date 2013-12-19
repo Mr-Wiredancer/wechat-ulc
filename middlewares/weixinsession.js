@@ -1,4 +1,6 @@
 // var Session = require('../models/session.js');
+var WeixinMessage = require('../helpers/weixinmessage.js');
+
 var staffs = {
 		"SAT":{},
 		"TOEFL":{},
