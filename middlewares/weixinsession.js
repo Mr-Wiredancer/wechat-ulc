@@ -79,7 +79,7 @@ var deleteExistingStaffFromPools = function(staff){
 //forward messages in order
 var forwardMessagesSync = function(token, user, messages){
 	console.log(messages.length);
-	if (messages.length = 0) return;
+	if (messages.length === 0) return;
 
 	var msg = messages.shift();
 
