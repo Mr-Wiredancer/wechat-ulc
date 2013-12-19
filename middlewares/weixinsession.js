@@ -121,7 +121,7 @@ module.exports = function(app){
 					}else{
 						console.log('enter queue');
 						staffs[subject][user] = {'info':'PLACEHOLDER'};
-						msg.makeResponseMessage('text', '[SYS]没有在等待的同学，你可以选择继续等待或另一个话题进行回答').forwardTo(app.get('ACCESSTOKEN', user));
+						msg.makeResponseMessage('text', '[SYS]没有在等待的同学，你可以选择继续等待或另一个话题进行回答').forwardTo(app.get('ACCESSTOKEN'), user);
 					}
 				}
 
