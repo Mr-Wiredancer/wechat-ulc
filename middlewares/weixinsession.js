@@ -159,7 +159,6 @@ module.exports = function(app){
 							'text', 
 							'[SYS]你可以开始跟老师交谈了'
 							).forwardTo(app.get('ACCESSTOKEN'), user);	
-
 					//NEED to wait
 					}else{
 
