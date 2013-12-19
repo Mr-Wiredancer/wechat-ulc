@@ -82,9 +82,10 @@ module.exports = function(app){
 
 			//*********** request is from staff ****************
 			if (req.isFromStaff) { 
-				
+				console.log('indeed from staff');
 				/* ignore the command if staff is in session and send a start request*/
 				if (isInSession(user)){ 
+					console.log('in session');
 					next(); return;
 
 				/* either idle or in a pool already. remove from existing queue if any; match stduent if any, otherwise add to new pool */	
@@ -94,6 +95,7 @@ module.exports = function(app){
 
 					//theres a match
 					if (queueHasClient(queue)){
+						console.log('has client');
 						var data = queue.shift()
 							, client = data.user
 							, messages = data.messages;
@@ -117,6 +119,7 @@ module.exports = function(app){
 
 					//no match, add to pool	
 					}else{
+						console.log('enter queue');
 						staffs[subject][user] = {'info':'PLACEHOLDER'};
 						res.send(msg.makeResponseMessage('text', '[SYS]没有在等待的同学，你可以选择继续等待或另一个话题进行回答'));
 					}
@@ -125,6 +128,7 @@ module.exports = function(app){
 			//*********** start session request is from client *******************
 			}else{
 
+				console.log('from client');
 				if (isInSession(user)){
 					next(); return;
 
