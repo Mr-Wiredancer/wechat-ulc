@@ -83,7 +83,7 @@ var forwardMessagesSync = function(token, user, messages){
 
 	var msg = messages.shift();
 
-	msg.forward.forwardTo(token, user, function(){forwardMessagesSync(token, user, messages)});
+	msg.forwardTo(token, user, function(){forwardMessagesSync(token, user, messages)});
 };
 
 module.exports = function(app){
