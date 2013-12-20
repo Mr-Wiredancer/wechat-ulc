@@ -33,6 +33,8 @@ exports.post = function(req, res){
  //    res.send('You dont pass the validation'); //没有通过微信服务器的验证，可能是微信服务器出错或者恶意请求
  //    return;
  //  }
+  res.send('');
+  return;
 
   var body = '';
 

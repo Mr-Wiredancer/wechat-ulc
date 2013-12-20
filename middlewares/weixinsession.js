@@ -227,7 +227,7 @@ module.exports = function(app){
 			console.log('normal msg');
 			var pos = getPosOfClient(user);
 			if (user in ongoing){
-				msg.forwardTo(app.get('ACCESSTOKEN'), user, function(){});
+				msg.forwardTo(app.get('ACCESSTOKEN'), ongoing[user], function(){});
 
 			}else if(pos){
 				pos.queue[pos.index].messages.push(msg);
