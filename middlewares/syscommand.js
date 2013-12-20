@@ -22,6 +22,20 @@ module.exports = function(req, res, next){
 					}
 				});
 		}
+	}else if(msg.isCounterRegisterCommand()){
+		if (msg.isFromStaff){
+			Staff.remove({openId:req.weixinMessage.FromUserName}
+				, function(err){
+					if (err){
+						res.send(msg.makeResponseMessage('text', '[SYS]反注册是啊比').toXML());
+					}else{
+						res.send(msg.makeResponseMessage('text', '[SYS]你的客服身份已删除').toXML());
+					}
+
+				});
+		} else {
+			res.send(msg.makeResponseMessage('text', '[SYS]您不是客服'));
+		}
 	}else {
 		res.send(msg.makeResponseMessage('text', '[SYS]'+msg.toFormatJSON()).toXML()); 
 	}

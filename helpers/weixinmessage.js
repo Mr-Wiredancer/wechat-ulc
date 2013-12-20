@@ -116,6 +116,10 @@ WeixinMessage.prototype.isRegisterCommand = function(){
 	return this.isText() && /^(!|！)注册$/.test(this.Content);
 };
 
+WeixinMessage.prototype.isCounterRegisterCommand = function(){
+	return this.isText() && /^(!|！)册注$/.test(this.Content);
+};
+
 WeixinMessage.prototype.forwardTo = function(token, toUserName, cb){
 	var msgData;
 
