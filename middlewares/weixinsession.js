@@ -252,7 +252,7 @@ module.exports = function(app){
 	            var msg2 = new WeixinMessage(msgData);
 	            msg2.sendThroughKefuInterface(app.get('ACCESSTOKEN'), function(){
 	            		//TODO:tell staff how many students are waiting
-	            		msgData['text']['content'] = 
+	            		msgData['text'][0]['content'] = 
 	            			"[SYS]学生等待队列情况:\n托福:阅读" + 
 	            			queues['TR'].length +
 	            			", 听力" + 
