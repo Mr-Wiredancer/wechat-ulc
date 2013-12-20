@@ -252,10 +252,36 @@ module.exports = function(app){
 	            var msg2 = new WeixinMessage(msgData);
 	            msg2.sendThroughKefuInterface(app.get('ACCESSTOKEN'), function(){
 	            		//TODO:tell staff how many students are waiting
-	            		msgData['text']['content'] = "[SYS]学生等待队列情况:\n托福:阅读"+queues['TR'].length+", 听力"+queues['TL'].length+", 口语"+queues['TS'].length+", 写作"+queues['TW'].length+";"+"
-	            			\n雅思:阅读"+queues['IR'].length+", 听力"+queues['IL'].length+", 口语"+queues['IS'].length+", 写作"+queues['IW'].length+";"+"
-	            			\nSAT:语法"+queues['SG'].length+", 写作"+queues['SW'].length+", 阅读"+queues['SR'].length+", 词汇"+queues['SV'].length+", 数学"+queues['SM'].length+";";
-
+	            		msgData['text']['content'] = 
+	            			"[SYS]学生等待队列情况:\n托福:阅读" + 
+	            			queues['TR'].length +
+	            			", 听力" + 
+	            			queues['TL'].length + 
+	            			", 口语" + 
+	            			queues['TS'].length + 
+	            			", 写作" + 
+	            			queues['TW'].length + 
+	            			";" + 
+	            			"\n雅思:阅读" + 
+	            			queues['IR'].length + 
+	            			", 听力" + 
+	            			queues['IL'].length + 
+	            			", 口语" + 
+	            			queues['IS'].length + 
+	            			", 写作" + 
+	            			queues['IW'].length + 
+	            			";" + 
+	            			"\nSAT:语法" + 
+	            			queues['SG'].length + 
+	            			", 写作" + 
+	            			queues['SW'].length + 
+	            			", 阅读" + 
+	            			queues['SR'].length + 
+	            			", 词汇" + 
+	            			queues['SV'].length + 
+	            			", 数学" + 
+	            			queues['SM'].length + 
+	            			";";
 
 	            		var msg3 = new WeixinMessage(msgData);
 	            		msg3.sendThroughKefuInterface(app.get('ACCESSTOKEN'));
