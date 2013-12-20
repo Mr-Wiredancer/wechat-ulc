@@ -13,9 +13,10 @@ module.exports = function(req, res, next){
 				, function(err){
 					if (err){
 						//do something if it goes wrong
-						console.log(err);
+						console.log('registration failed');
 		         		res.send(msg.makeResponseMessage('text', '[SYS]注册失败，请再尝试一次').toXML());
 					}else{
+						console.log('registration succeeded');
 		         		res.send(msg.makeResponseMessage('text', '[SYS]您已成功注册成为客服').toXML());
 					}
 				});
