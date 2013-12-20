@@ -30,6 +30,7 @@ var updateAccessToken = function(){
       if (token){
         app.set('ACCESSTOKEN', token);
       }
+      console.log(token);
   });
 };
 
