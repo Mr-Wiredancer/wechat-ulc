@@ -6,12 +6,46 @@ var TOKEN = 'dxhackers'
   , msgQueue = []
   , kefuList = []
   // , APPID = 'wx536ca9a0d796f541'
-  , APPID = 'wx07031480fe88fbf6' //TEST ACCOUNT
+  // , APPID = 'wx07031480fe88fbf6' //TEST ACCOUNT
   // , APPSECRET = '6b02a04187dcc4567f0f683a5e081773'
-  , APPSECRET = 'f73012337cad2ab2a8008cb27b54775c'
+  // , APPSECRET = 'f73012337cad2ab2a8008cb27b54775c'
   // , ACCESSTOKEN = ''
   // , requestify = require('requestify')
 	, WeixinMessage = require('../helpers/weixinmessage.js');
+
+
+/*
+{
+    "button": [
+        {
+            "type": "click", 
+            "name": "敬请期待", 
+            "key": "MORE"
+        }, 
+        {
+            "name": "老师答疑", 
+            "sub_button": [
+                {
+                    "type": "click", 
+                    "name": "SAT", 
+                    "key": "SAT"
+                }, 
+                {
+                    "type": "click", 
+                    "name": "TOEFL", 
+                    "key": "TOEFL"
+                }, 
+                {
+                    "type": "click", 
+                    "name": "AP", 
+                    "key": "AP"
+                }
+            ]
+        }
+    ]
+}
+
+*/
 
 
 //NOT A GOOD IDEA: update the accesstoken every 7100s (weixin's expires every 7200s)

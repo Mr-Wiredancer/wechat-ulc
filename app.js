@@ -16,10 +16,10 @@ var express = require('express')
   , weixin = require('./controllers/weixin.js');
 
 var app = express()
-  // , APPID = 'wx536ca9a0d796f541'
-  , APPID = 'wx07031480fe88fbf6' //TEST ACCOUNT
-  // , APPSECRET = '6b02a04187dcc4567f0f683a5e081773'
-  , APPSECRET = 'f73012337cad2ab2a8008cb27b54775c'
+  , APPID = 'wx536ca9a0d796f541'
+  // , APPID = 'wx07031480fe88fbf6' //TEST ACCOUNT
+  , APPSECRET = '6b02a04187dcc4567f0f683a5e081773'
+  // , APPSECRET = 'f73012337cad2ab2a8008cb27b54775c'
   , requestify = require('requestify');
 
 
