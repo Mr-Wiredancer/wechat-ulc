@@ -101,7 +101,8 @@ WeixinMessage.prototype.isResetCommand = function(){
 
 WeixinMessage.prototype.isSystemCommand = function(){
 	// return this.isRegisterCommand() || this.isResetCommand();
-	return this.isRegisterCommand();
+	// return this.isRegisterCommand();
+	return this.isRegisterCommand() || this.isEndConversationCommand() || this.isResetCommand();
 };
 
 WeixinMessage.prototype.isStartConversationCommand = function(){
