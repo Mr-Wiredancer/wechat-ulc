@@ -284,6 +284,7 @@ module.exports = function(app){
 	            			";";
 
 	            		var msg3 = new WeixinMessage(msgData);
+	            		console.log(msg3);
 	            		msg3.sendThroughKefuInterface(app.get('ACCESSTOKEN'));
 	            });
 
