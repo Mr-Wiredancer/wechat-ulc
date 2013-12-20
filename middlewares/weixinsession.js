@@ -117,6 +117,7 @@ module.exports = function(app){
 		if (msg.isResetCommand()){
 			resetAll();
 			res.send(msg.makeResponseMessage('text', '[SYS]所有队列已经重置').toXML());
+			return;
 		}	
 
 		// ### menu click, used to start a new conversation if possible
