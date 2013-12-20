@@ -96,7 +96,7 @@ WeixinMessage.prototype.toFormatJSON = function(){
 };
 
 WeixinMessage.prototype.isResetCommand = function(){
-	return /^reset$/.test(this.Content);
+	return /^(!|！)重置$/.test(this.Content);
 }
 
 WeixinMessage.prototype.isSystemCommand = function(){

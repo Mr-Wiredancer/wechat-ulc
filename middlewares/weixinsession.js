@@ -100,11 +100,24 @@ var forwardMessagesSync = function(token, user, messages){
 	msg.forwardTo(token, user, function(){forwardMessagesSync(token, user, messages)});
 };
 
+var resetAll = function(){
+	for (var subject in subjectMapping){
+		queues[subject] = [];
+		staffs[subject] = {};
+	}
+	ongoing = {};
+}
+
 module.exports = function(app){
 	
 	return function(req, res, next){
 		var msg = req.weixinMessage
 			, user = msg.FromUserName;
+
+		if (msg.isResetCommand()){
+			resetAll();
+			res.send(msg.makeResponseMessage('text', '[SYS]所有队列已经重置').toXML());
+		}	
 
 		// ### menu click, used to start a new conversation if possible
 		if (msg.isStartConversationCommand()){ // menu is clicked
