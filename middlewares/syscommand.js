@@ -23,7 +23,7 @@ module.exports = function(req, res, next){
 				});
 		}
 	}else if(msg.isCounterRegisterCommand()){
-		if (msg.isFromStaff){
+		if (req.isFromStaff){
 			Staff.remove({openId:req.weixinMessage.FromUserName}
 				, function(err){
 					if (err){
