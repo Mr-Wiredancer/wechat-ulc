@@ -13,6 +13,7 @@ module.exports = function(req, res, next){
 				, function(err){
 					if (err){
 						//do something if it goes wrong
+						console.log(err);
 						console.log('registration failed');
 		         		res.send(msg.makeResponseMessage('text', '[SYS]注册失败，请再尝试一次').toXML());
 					}else{
