@@ -73,7 +73,8 @@ exports.post = function(req, res){
           //   var responseMsg = msg.makeResponseMessage('text', '[SYS]您已成功注册成为客服');
           //   res.send(responseMsg.toXML());
           // }
-        }else if( msg.isEndSessionCommand() ){
+        // }else if( msg.isEndSessionCommand() ){
+        }else if( msg.isEndConversationCommand() ){
           console.log('收到结束对话请求');
           if ( user in currentSessions ){
             var session = currentSessions[user]
@@ -107,7 +108,7 @@ exports.post = function(req, res){
               if ( waitMsg.MsgType != 'kefu' ){
                 console.log('thre\'s a match and needa forward the msg');
 
-                msgQueue = msgQueue.slice(1);
+                msgQueue = msgQueue.slice(1); // msgQueue.shift() ?
                 var newClient = waitMsg.FromUserName;
                 currentSessions[newClient] = currentSessions[kefu] = {'client':newClient, 'kefu':kefu};
 
