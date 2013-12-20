@@ -156,6 +156,7 @@ WeixinMessage.prototype.forwardTo = function(token, toUserName, cb){
 }
 
 WeixinMessage.prototype.sendThroughKefuInterface = function(token, cb){
+	console.log(this);
 	requestify.post('https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='+token, this).then(cb);
 	return;
 };
