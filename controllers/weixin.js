@@ -45,6 +45,91 @@ var TOKEN = 'dxhackers'
     ]
 }
 
+{
+    "button": [
+        {
+            "name": "托福", 
+            "sub_button": [
+                {
+                    "type": "click", 
+                    "name": "阅读", 
+                    "key": "TR"
+                }, 
+                {
+                    "type": "click", 
+                    "name": "听力", 
+                    "key": "TL"
+                }, 
+                {
+                    "type": "click", 
+                    "name": "口语", 
+                    "key": "TS"
+                },
+                {
+                    "type": "click", 
+                    "name": "写作", 
+                    "key": "TW"
+                }
+            ]
+        },
+        {
+            "name": "雅思", 
+            "sub_button": [
+                {
+                    "type": "click", 
+                    "name": "阅读", 
+                    "key": "IR"
+                }, 
+                {
+                    "type": "click", 
+                    "name": "听力", 
+                    "key": "IL"
+                }, 
+                {
+                    "type": "click", 
+                    "name": "口语", 
+                    "key": "IS"
+                },
+                {
+                    "type": "click", 
+                    "name": "写作", 
+                    "key": "IW"
+                }
+            ]
+        },
+        {
+            "name": "SAT", 
+            "sub_button": [
+                {
+                    "type": "click", 
+                    "name": "语法", 
+                    "key": "SG"
+                }, 
+                {
+                    "type": "click", 
+                    "name": "写作", 
+                    "key": "SW"
+                }, 
+                {
+                    "type": "click", 
+                    "name": "阅读", 
+                    "key": "SR"
+                },
+                {
+                    "type": "click", 
+                    "name": "词汇", 
+                    "key": "SV"
+                },
+                {
+                    "type": "click", 
+                    "name": "数学", 
+                    "key": "SM"
+                }
+            ]
+        }
+    ]
+}
+
 */
 
 

@@ -1,17 +1,31 @@
 // var Session = require('../models/session.js');
 var WeixinMessage = require('../helpers/weixinmessage.js');
 
-var staffs = {
-		"SAT":{},
-		"TOEFL":{},
-		"AP":{}
-	}
+var subjectMapping = {
+	TR:'托福阅读',
+	TL:'托福听力',
+	TS:'托福口语',
+	TW:'托福写作',
+	IR:'雅思阅读',
+	IL:'雅思听力',
+	IS:'雅思口语',
+	IW:'雅思写作',
+	SG:'SAT阅读',
+	SW:'SAT听力',
+	SR:'SAT口语',
+	SV:'SAT写作',
+	SM:'SAT数学'	
+};
+
+var staffs = {}
 	, ongoing = {}
-	, queues = {
-		"SAT":[],
-		"TOEFL":[],
-		"AP":[]
-	};
+	, queues = {};
+
+//populate queues and pools
+for (var subject in subjectMapping){
+	queues[subject] = [];
+	staffs[subject] = {};
+}
 
 var queueHasClient = function(arr){
 	return arr.length>0;
@@ -95,7 +109,7 @@ module.exports = function(app){
 		// ### menu click, used to start a new conversation if possible
 		if (msg.isStartConversationCommand()){ // menu is clicked
 			console.log('start converstaion comamnd');
-			if (msg.EventKey === 'MORE'){ next(); return;}
+			// if (msg.EventKey === 'MORE'){ next(); return;}
 
 			var subject = msg.EventKey
 				, queue = queues[subject];
@@ -145,7 +159,7 @@ module.exports = function(app){
 					}else{
 						console.log('enter queue');
 						staffs[subject][user] = {'info':'PLACEHOLDER'};
-						msg.makeResponseMessage('text', '[SYS]没有在等待'+subject+'答疑的同学，你可以选择继续等待或选择另一个话题进行回答').forwardTo(app.get('ACCESSTOKEN'), user);
+						msg.makeResponseMessage('text', '[SYS]没有在等待'+subjectMapping[subject]+'答疑的同学，你可以选择继续等待或选择另一个话题进行回答').forwardTo(app.get('ACCESSTOKEN'), user);
 					}
 				}
 
@@ -203,21 +217,29 @@ module.exports = function(app){
 			console.log('end conversation command');
 
 			if (user in ongoing) {
+
 				var otherUser = ongoing[user];
 
-				delete ongoing[user]; delete ongoing[otherUser];
+				var client = req.isFromStaff?otherUser:user;
+				var staff = req.isFromStaff?user:otherUser;
+
+				delete ongoing[client]; delete ongoing[staff];
 
 				var msgData = {
-                  'touser': [user],
+                  'touser': [client],
                   'msgtype': ['text'],
                   'text': [{'content':"[SYS]对话已结束"}]
                 };
 
 	            var msg1 = new WeixinMessage(msgData);
-	            msgData.touser = [otherUser];
-	            var msg2 = new WeixinMessage(msgData);
 	            msg1.sendThroughKefuInterface(app.get('ACCESSTOKEN'));
-	            msg2.sendThroughKefuInterface(app.get('ACCESSTOKEN'));
+
+	            msgData.touser = [staff];
+	            var msg2 = new WeixinMessage(msgData);
+	            msg2.sendThroughKefuInterface(app.get('ACCESSTOKEN'), function(){
+	            		//TODO:tell staff how many students are waiting
+
+	            });
 
 			} else {
 				msg.makeResponseMessage('text', '[SYS]你没有在任何对话中').forwardTo(app.get('ACCESSTOKEN'), user);
