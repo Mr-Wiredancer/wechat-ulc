@@ -6,7 +6,7 @@ var staffSchema = new Schema({
 });
 
 staffSchema.path('openId').validate(function(val){
-	return /^\s*$/.test(val);
+	return !(/^\s*$/.test(val));
 }, 'openId cannot be empty');
 
 module.exports = mongoose.model('Staff', staffSchema);
