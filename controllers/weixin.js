@@ -126,7 +126,6 @@ exports.post = function(req, res){
 
 //微信的服务器配置测试
 exports.test = function(req, res){
-  console.log(next);
 	if ( isValidWeixinRequest(req.query.signature, req.query.timestamp, req.query.nonce)){
     res.send(req.query.echostr);
  	}else{
