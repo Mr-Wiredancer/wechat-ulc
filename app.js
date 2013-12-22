@@ -20,7 +20,7 @@ var app = express()
   , APPID = 'wx536ca9a0d796f541'
   // , APPID = 'wx07031480fe88fbf6' //TEST ACCOUNT
   , APPSECRET = '6b02a04187dcc4567f0f683a5e081773'
-  // , APPSECRET = 'f73012337cad2ab2a8008cb27b54775c'
+  // , APPSECRET = 'f73012337cad2ab2a8008cb27b54775c' //TEST ACCOUNT
   , requestify = require('requestify');
 
 
@@ -59,9 +59,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
-
-// app.get('/', routes.index);
-// app.get('/users', user.list);
 
 app.get('/weixin', weixin.test);
 
