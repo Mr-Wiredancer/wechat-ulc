@@ -95,6 +95,10 @@ WeixinMessage.prototype.toFormatJSON = function(){
 	return JSON.stringify(this);
 };
 
+WeixinMessage.prototype.isStatsCommand = function(){
+	return /^(!|！)统计$/.test(this.Content);
+}
+
 WeixinMessage.prototype.isResetCommand = function(){
 	return /^(!|！)重置$/.test(this.Content);
 }

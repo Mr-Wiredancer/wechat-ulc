@@ -118,6 +118,38 @@ module.exports = function(app){
 			resetAll();
 			res.send(msg.makeResponseMessage('text', '[SYS]所有队列已经重置').toXML());
 			return;
+		}else if(msg.isStatsCommand() && req.isFromStaff){
+			res.send(msg.makeResponseMessage('text',
+				"[SYS]学生等待队列情况:\n托福:阅读" + 
+	            			queues['TR'].length +
+	            			", 听力" + 
+	            			queues['TL'].length + 
+	            			", 口语" + 
+	            			queues['TS'].length + 
+	            			", 写作" + 
+	            			queues['TW'].length + 
+	            			";" + 
+	            			"\n雅思:阅读" + 
+	            			queues['IR'].length + 
+	            			", 听力" + 
+	            			queues['IL'].length + 
+	            			", 口语" + 
+	            			queues['IS'].length + 
+	            			", 写作" + 
+	            			queues['IW'].length + 
+	            			";" + 
+	            			"\nSAT:语法" + 
+	            			queues['SG'].length + 
+	            			", 写作" + 
+	            			queues['SW'].length + 
+	            			", 阅读" + 
+	            			queues['SR'].length + 
+	            			", 词汇" + 
+	            			queues['SV'].length + 
+	            			", 数学" + 
+	            			queues['SM'].length + 
+	            			";").toXML());
+			return;
 		}	
 
 		// ### menu click, used to start a new conversation if possible
