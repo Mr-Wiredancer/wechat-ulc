@@ -430,7 +430,9 @@ exports.test = function(req, res, next){
   console.log(next);
 	if ( isValidWeixinRequest(req.query.signature, req.query.timestamp, req.query.nonce)){
     res.send(req.query.echostr);
- 	} 
+ 	}else{
+    res.send('sorry');
+  } 
 }
 
 //开发者验证流程： 将timestamp, nonce和TOKEN字典排序后生成的SHA1 Hash和signature匹配
