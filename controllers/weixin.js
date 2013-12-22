@@ -1,4 +1,5 @@
-var TOKEN = 'dxhackers';
+var TOKEN = 'dxhackers'
+  , crypto = require('crypto');
 
 
 /*
