@@ -11,10 +11,10 @@ var subjectMapping = {
 	IL:'雅思听力',
 	IS:'雅思口语',
 	IW:'雅思写作',
-	SG:'SAT阅读',
-	SW:'SAT听力',
-	SR:'SAT口语',
-	SV:'SAT写作',
+	SG:'SAT语法',
+	SW:'SAT写作',
+	SR:'SAT阅读',
+	SV:'SAT词汇',
 	SM:'SAT数学'	
 };
 
@@ -32,7 +32,7 @@ for (var subject in subjectMapping){
 var isWorkingHour = function(){
 	var time = (new Date).getTime()
 		, hr = (time/3600000+8)%24;
-
+	console.log('isWorkingHour. current time: %s; current hr %s', new Date, hr);
 	return hr>=9 && hr<17;
 };
 
@@ -45,10 +45,14 @@ var notifyStaffs = function(subject, token){
 						});
 
 		Staff.find({}, function(err, staffs){
+
+			console.log('notfyStaffs: subject:%s; staffs: %j', subject, staffs);
+
 			for (var i = 0; i<staffs.length; i++){
 				var staffId = staffs[i].openId;
 				if (!(staffId in ongoing)){
 					//notify
+
 					notif.touser = staffId;
 					notif.sendThroughKefuInterface(token);
 
@@ -144,6 +148,8 @@ module.exports = function(app){
 	return function(req, res, next){
 		var msg = req.weixinMessage
 			, user = msg.FromUserName;
+
+		console.log('weixinsession: staffs:%j; queues:%j; ongoing:%j', staffs, queues, ongoing);
 
 		if (msg.isResetCommand()){
 			resetAll();

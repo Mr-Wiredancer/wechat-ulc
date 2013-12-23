@@ -31,24 +31,20 @@ var updateAccessToken = function(){
       if (token){
         app.set('ACCESSTOKEN', token);
       }
-      console.log("TOKEN is: "+token);
+      console.log("TOKEN: "+token);
   });
 };
 
 app.set('ACCESSTOKEN', '');
 updateAccessToken();
 setInterval(updateAccessToken, 7100*1000);
-// var uristring =
-// process.env.MONGOLAB_URI ||
-// process.env.MONGOHQ_URL ||
-// 'mongodb://localhost/HelloMongoose';
 
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.favicon());
-app.use(express.logger('dev'));
+app.use(express.logger('default'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());

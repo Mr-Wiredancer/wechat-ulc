@@ -128,9 +128,9 @@ exports.post = function(req, res){
 //微信的服务器配置测试
 exports.test = function(req, res){
 	if ( isValidWeixinRequest(req.query.signature, req.query.timestamp, req.query.nonce)){
-    res.send(req.query.echostr);
+        res.send(req.query.echostr);
  	}else{
-    res.send('you didnt pass the validation');
+        res.send('you didnt pass the validation');
   } 
 }
 
