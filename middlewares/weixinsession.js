@@ -1,5 +1,6 @@
 // var Session = require('../models/session.js');
-var WeixinMessage = require('../helpers/weixinmessage.js');
+var WeixinMessage = require('../helpers/weixinmessage.js')
+	, Staff = require('../models/staff.js');
 
 var subjectMapping = {
 	TR:'托福阅读',
@@ -26,6 +27,35 @@ for (var subject in subjectMapping){
 	queues[subject] = [];
 	staffs[subject] = {};
 }
+
+var isWorkingHour = function(){
+	var time = (new Date).getTime()
+		, hr = (time/3600000+8)%24;
+
+	return hr>=9 && hr<17;
+};
+
+var notifyStaffs = function(subject, toekn){
+
+	if (isWorkingHour()){
+		var notif = new WeixinMessage({
+							'msgtype': ['text'],
+							'text': [{'content':"[SYS]有一个新同学在等待"+subjectMapping[subject]+"的回答"}]
+						});
+
+		Staff.find({}, function(err, staffs){
+			for (var i = 0; i<staffs.length; i++){
+				var staffId = staffs[i].openId;
+				if (!(staffId in ongoing)){
+					//notify
+					notif.touser = [staffId];
+					notif.sendThroughKefuInterface(token);
+
+				}
+			}
+		});
+	}
+};
 
 var queueHasClient = function(arr){
 	return arr.length>0;
@@ -255,6 +285,7 @@ module.exports = function(app){
 							'[SYS]暂时没有空闲的老师来回答你的问题，你的前面还有'+(queues[subject].length-1)+'个同学在等待。在你等待的过程中你可以先把问题发上来^_^'
 							).forwardTo(app.get('ACCESSTOKEN'), user);
 
+						notifyStaffs(subject, app.get('ACCESSTOKEN'));
 					}
 				}
 			}
@@ -332,6 +363,7 @@ module.exports = function(app){
 
 			}else if(pos){
 				pos.queue[pos.index].messages.push(msg);
+				res.send('');
 			}else next();		
 
 		}else{

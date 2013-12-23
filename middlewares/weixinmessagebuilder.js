@@ -12,7 +12,7 @@ module.exports = function(req, res, next){
 		parseString(body, function(err, result){
 			if (err) {/*do something*/console.log(err)}
 			req.weixinMessage = new WeixinMessage(result.xml);
-      req.weixinMessage.log();
+      		req.weixinMessage.log();
 			next();	
 		});
 	});
