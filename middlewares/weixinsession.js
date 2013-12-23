@@ -36,7 +36,7 @@ var isWorkingHour = function(){
 	return hr>=9 && hr<17;
 };
 
-var notifyStaffs = function(subject, toekn){
+var notifyStaffs = function(subject, token){
 
 	if (isWorkingHour()){
 		var notif = new WeixinMessage({
