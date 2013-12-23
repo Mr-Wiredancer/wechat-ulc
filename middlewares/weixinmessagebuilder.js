@@ -19,6 +19,7 @@ module.exports = function(req, res, next){
 			req.weixinMessage = new WeixinMessage(result.xml);
       		req.weixinMessage.log();
       		console.log('weixinMessage: %j', req.weixinMessage);
+			
 			next();	
 		});
 	});
