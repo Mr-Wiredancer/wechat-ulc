@@ -28,6 +28,7 @@ for (var subject in subjectMapping){
 	staffs[subject] = {};
 }
 
+//working hour is from 9am to 5pm
 var isWorkingHour = function(){
 	var time = (new Date).getTime()
 		, hr = (time/3600000+8)%24;
