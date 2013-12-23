@@ -49,7 +49,7 @@ var notifyStaffs = function(subject, token){
 				var staffId = staffs[i].openId;
 				if (!(staffId in ongoing)){
 					//notify
-					notif.touser = [staffId];
+					notif.touser = staffId;
 					notif.sendThroughKefuInterface(token);
 
 				}
