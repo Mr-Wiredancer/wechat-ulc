@@ -2,7 +2,6 @@ var Staff = require('../models/staff.js');
 
 module.exports = function(req, res, next){
 	var msg = req.weixinMessage
-	console.log('Incoming msg is %j', msg);
 	if (!msg.isSystemCommand()){ next(); return;}//isn't system command
 
 	if (msg.isRegisterCommand()){
