@@ -362,6 +362,7 @@ module.exports = function(app){
 			} else {
 				msg.makeResponseMessage('text', '[SYS]你没有在任何对话中').forwardTo(app.get('ACCESSTOKEN'), user);
 			}
+			res.send('');
 		// ### normal messages, forward to staff if possible; 
 		}else if (msg.isNormalMessage()){
 			console.log('normal msg');
@@ -369,6 +370,7 @@ module.exports = function(app){
 			if (user in ongoing){
 				msg.forwardTo(app.get('ACCESSTOKEN'), ongoing[user], function(){});
 
+				res.send('');
 			}else if(pos){
 				pos.queue[pos.index].messages.push(msg);
 				res.send('');
