@@ -38,6 +38,7 @@ module.exports = function(req, res, next){
 		} else {
 			res.send(msg.makeResponseMessage('text', '[SYS]您不是客服').toXML());
 		}
+		
 	}else {
 		res.send(msg.makeResponseMessage('text', '[SYS]' + msg.toFormatJSON()).toXML()); 
 	}
