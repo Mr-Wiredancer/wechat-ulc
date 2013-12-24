@@ -1,8 +1,13 @@
 var Staff = require('../models/staff.js');
 
+
+//handles system commands(register, de-register) only; else call next middleware
 module.exports = function(req, res, next){
 	var msg = req.weixinMessage
-	if (!msg.isSystemCommand()){ next(); return;}//isn't system command
+	if (!msg.isSystemCommand()){ 
+		next(); 
+		return;
+	}//isn't system command
 
 	if (msg.isRegisterCommand()){
 		if (req.isFromStaff){
@@ -38,8 +43,8 @@ module.exports = function(req, res, next){
 		} else {
 			res.send(msg.makeResponseMessage('text', '[SYS]您不是客服').toXML());
 		}
-		
+
 	}else {
-		res.send(msg.makeResponseMessage('text', '[SYS]' + msg.toFormatJSON()).toXML()); 
+		res.send(msg.makeResponseMessage('text', '[SYS]unknown message').toXML()); 
 	}
 }
