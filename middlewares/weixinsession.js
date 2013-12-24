@@ -374,7 +374,9 @@ module.exports = function(app){
 			}else if(pos){
 				pos.queue[pos.index].messages.push(msg);
 				res.send('');
-			}else next();		
+			}else {
+				res.send(msg.makeResponseMessage('text', '[SYS]先从下面的菜单选一个科目再问问题吧~').toXML());
+			}	
 
 		}else{
 			console.log('nothing');
