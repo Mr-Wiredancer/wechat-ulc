@@ -295,6 +295,7 @@ module.exports = function(app){
 						notifyStaffs(subject, app.get('ACCESSTOKEN'));
 					}
 				}
+				res.send('');
 			}
 
 		}else if(msg.isEndConversationCommand()){
