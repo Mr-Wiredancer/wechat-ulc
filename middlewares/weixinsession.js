@@ -245,7 +245,7 @@ module.exports = function(app){
 						msg.makeResponseMessage('text', '[SYS]没有在等待'+subjectMapping[subject]+'答疑的同学，你可以选择继续等待或选择另一个话题进行回答').forwardTo(app.get('ACCESSTOKEN'), user);
 					}
 				}
-
+				res.send('');
 			//*********** start session request is from client *******************
 			}else{
 
