@@ -4,8 +4,9 @@ module.exports = function(req, res, next){
 	Staff.findOne({openId:req.weixinMessage.FromUserName}
 		, function(err, staff){
 			if (err){
-				console.log('error finding staff in identitychecker');
-				console.log(err);
+				console.log('identitychecker: error finding: %j', err);
+        res.send('');
+        return;
 			}
 
 			req.isFromStaff = !!staff;

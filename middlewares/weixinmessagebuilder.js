@@ -12,15 +12,15 @@ module.exports = function(req, res, next){
 		parseString(body, function(err, result){
 			if (err) {
 				/*do something*/
-				console.log('something wrong parsing the xml');
-				console.log(err);
+				console.log('weixinmessagebuilder: parsing error: %j', err);
+        res.send('');
+        return;
 			}
 
 			req.weixinMessage = new WeixinMessage(result.xml);
-      		req.weixinMessage.log();
-      		console.log('weixinMessage: %j', req.weixinMessage);
-			
-			next();	
+      req.weixinMessage.log();
+      console.log('weixinMessage: %j', req.weixinMessage);
+    	next();	
 		});
 	});
 };

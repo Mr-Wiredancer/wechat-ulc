@@ -9,6 +9,7 @@ module.exports = function(req, res, next){
 		return;
 	}//isn't system command
 
+	console.log('syscomamnd: msg is system command');
 	if (msg.isRegisterCommand()){
 		if (req.isFromStaff){
       		res.send(msg.makeResponseMessage('text', '[SYS]您已经是客服，请不要重复注册').toXML());
@@ -45,6 +46,7 @@ module.exports = function(req, res, next){
 		}
 
 	}else {
-		res.send(msg.makeResponseMessage('text', '[SYS]unknown message').toXML()); 
+		//should not reach here
+		res.send(msg.makeResponseMessage('text', '[SYS]unknown system message').toXML()); 
 	}
 }

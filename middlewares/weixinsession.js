@@ -191,19 +191,19 @@ module.exports = function(app){
 
 		// ### menu click, used to start a new conversation if possible
 		if (msg.isStartConversationCommand()){ // menu is clicked
-			console.log('start converstaion comamnd');
-			// if (msg.EventKey === 'MORE'){ next(); return;}
+			console.log('weixinsession: start converstaion comamnd');
 
 			var subject = msg.EventKey
 				, queue = queues[subject];
 
 			//*********** request is from staff ****************
 			if (req.isFromStaff) { 
-				console.log('indeed from staff');
+				console.log('weixinsession: user is staff');
 				/* ignore the command if staff is in session and send a start request*/
 				if (isInSession(user)){ 
-					console.log('in session');
-					next(); return;
+					console.log('weixinsession: user is in session');
+					res.send(msg.makeResponseMessage('text', '[SYS]你已经处在对话之中。').toXML());
+					return;
 
 				/* either idle or in a pool already. remove from existing queue if any; match stduent if any, otherwise add to new pool */	
 				}else {
@@ -240,18 +240,20 @@ module.exports = function(app){
 
 					//no match, add to pool	
 					}else{
-						console.log('enter queue');
+						console.log('weixinsession: msg enters queue');
 						staffs[subject][user] = {'info':'PLACEHOLDER'};
 						msg.makeResponseMessage('text', '[SYS]没有在等待'+subjectMapping[subject]+'答疑的同学，你可以选择继续等待或选择另一个话题进行回答').forwardTo(app.get('ACCESSTOKEN'), user);
 					}
 				}
-				res.send('');
+
 			//*********** start session request is from client *******************
 			}else{
 
-				console.log('from client');
+				console.log('weixinsession: user is client');
 				if (isInSession(user)){
-					next(); return;
+					console.log('weixinsession: user is in session');
+					res.send(msg.makeResponseMessage('text', '[SYS]你已经处在对话之中。').toXML());
+					return;
 
 				/* either idle or in a queue already. remove from existing queue if any; match teacher if any, otherwise add to new queue */	
 				} else {
@@ -295,11 +297,12 @@ module.exports = function(app){
 						notifyStaffs(subject, app.get('ACCESSTOKEN'));
 					}
 				}
-				res.send('');
 			}
+			res.send('');
+			return;
 
 		}else if(msg.isEndConversationCommand()){
-			console.log('end conversation command');
+			console.log('weixinsession: msg is end conversation command');
 
 			if (user in ongoing) {
 
@@ -363,9 +366,10 @@ module.exports = function(app){
 				msg.makeResponseMessage('text', '[SYS]你没有在任何对话中').forwardTo(app.get('ACCESSTOKEN'), user);
 			}
 			res.send('');
+			return;
 		// ### normal messages, forward to staff if possible; 
 		}else if (msg.isNormalMessage()){
-			console.log('normal msg');
+			console.log('weixinsession: normal msg');
 			var pos = getPosOfClient(user);
 			if (user in ongoing){
 				msg.forwardTo(app.get('ACCESSTOKEN'), ongoing[user], function(){});
@@ -377,9 +381,9 @@ module.exports = function(app){
 			}else {
 				res.send(msg.makeResponseMessage('text', '[SYS]先从下面的菜单选一个科目再问问题吧~').toXML());
 			}	
-
+			return;
 		}else{
-			console.log('nothing');
+			console.log('weixinsession: nothing');
 			next();
 		}
 	};
