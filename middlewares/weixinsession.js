@@ -222,7 +222,7 @@ module.exports = function(app){
 							, client = data.user
 							, messages = data.messages;
 
-						Session.create({staffOpenId:user, clientOpenId:client logs:[]}, function(err, session){
+						Session.create({staffOpenId:user, clientOpenId:client, logs:[]}, function(err, session){
 							ongoing[client] = {'user': user, 'session': session};
 							ongoing[user] = {'user': client, 'session': session};
 
