@@ -1,6 +1,7 @@
 // var Session = require('../models/session.js');
 var WeixinMessage = require('../helpers/weixinmessage.js')
-  , Session = require('../models/session.js')
+  	, Session = require('../models/session.js')
+  	, util = require('util')
 	, Staff = require('../models/staff.js');
 
 var subjectMapping = {
