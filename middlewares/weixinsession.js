@@ -134,6 +134,9 @@ var forwardMessagesSync = function(token, user, messages){
 	var msg = messages.shift();
 
 	Session.update(ongoing[user]['session'], {$push: {logs: msg._id}}, function(err, numberAffected, rawResponse){
+		if (err){
+			console.log('update session error: %j', err);
+		}
 
 		msg.forwardTo(token, user, function(){forwardMessagesSync(token, user, messages)});
 	});
@@ -389,6 +392,9 @@ module.exports = function(app){
 			var pos = getPosOfClient(user);
 			if (user in ongoing){
 				Session.update(ongoing[user]['session'], {$push: {logs: msg._id}}, function(err, numberAffected, rawResponse){
+					if (err){
+						console.log('update session error: %j', err);
+					}
 
 					msg.forwardTo(app.get('ACCESSTOKEN'), ongoing[user]['user'], function(){});
 
