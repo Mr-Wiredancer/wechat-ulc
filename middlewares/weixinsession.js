@@ -218,7 +218,7 @@ module.exports = function(app){
 							, client = data.user
 							, messages = data.messages;
 
-						Session.create(function(err, session){
+						Session.create({logs:[]}, function(err, session){
 							ongoing[client] = {'user': user, 'session': session};
 							ongoing[user] = {'user': client, 'session': session};
 
@@ -272,7 +272,7 @@ module.exports = function(app){
 						var staff = Object.keys(staffs[subject]).pop();
 						delete staffs[subject][staff];
 
-						Session.create(function(err, session){
+						Session.create({logs:[]}, function(err, session){
 
 							ongoing[staff] = {'user':user, 'session':session};
 							ongoing[user] = {'user':staff, 'session':session};
@@ -384,7 +384,7 @@ module.exports = function(app){
 			console.log('weixinsession: normal msg');
 			var pos = getPosOfClient(user);
 			if (user in ongoing){
-				Session.update(ongoing['session'], {$push: msg._id}, function(err, numberAffected, rawResponse){
+				Session.update(ongoing['session'], {$push: {logs: msg._id}}, function(err, numberAffected, rawResponse){
 
 					msg.forwardTo(app.get('ACCESSTOKEN'), ongoing[user]['user'], function(){});
 
