@@ -133,7 +133,7 @@ var forwardMessagesSync = function(token, user, messages){
 
 	var msg = messages.shift();
 
-	Session.update(ongoing[user]['session'], {$push: {logs: msg._id}}, function(err, numberAffected, rawResponse){
+	Session.update(ongoing[user]['session'], {$push: {logs: msg._id}}, { upsert: true },function(err, numberAffected, rawResponse){
 		if (err){
 			console.log('update session error: %j', err);
 		}
@@ -393,7 +393,7 @@ module.exports = function(app){
 			console.log('weixinsession: normal msg');
 			var pos = getPosOfClient(user);
 			if (user in ongoing){
-				Session.update(ongoing[user]['session'], {$push: {logs: msg._id}}, function(err, numberAffected, rawResponse){
+				Session.update(ongoing[user]['session'],  {$push: {logs: msg._id}}, { upsert: true }, function(err, numberAffected, rawResponse){
 					if (err){
 						console.log('update session error: %j', err);
 					}
