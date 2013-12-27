@@ -155,6 +155,25 @@ var resetAll = function(){
 	ongoing = {};
 }
 
+var getStats = function(){
+	return util.format(
+		"[SYS]学生等待队列情况:\n托福:阅读%d, 听力%d, 口语%d, 写作%d;\n雅思:阅读%d, 听力%d, 口语%d, 写作%d;\nSAT:语法%d, 写作%d, 阅读%d, 词汇%d, 数学%d" 
+		,queues['TR'].length
+		,queues['TL'].length
+		,queues['TS'].length
+		,queues['TW'].length
+		,queues['IR'].length
+		,queues['IL'].length
+		,queues['IS'].length
+		,queues['IW'].length
+		,queues['SG'].length
+		,queues['SW'].length
+		,queues['SR'].length
+		,queues['SV'].length
+		,queues['SM'].length
+		);
+}
+
 module.exports = function(app){
 	
 	return function(req, res, next){
@@ -163,41 +182,12 @@ module.exports = function(app){
 
 		console.log('weixinsession: staffs:%j; queues:%j; ongoing:%j', staffs, queues, ongoing);
 
-		if (msg.isResetCommand()){
+		if (msg.isResetCommand() && req.isFromStaff){
 			resetAll();
 			res.send(msg.makeResponseMessage('text', '[SYS]所有队列已经重置').toXML());
 			return;
 		}else if(msg.isStatsCommand() && req.isFromStaff){
-			res.send(msg.makeResponseMessage('text',
-				"[SYS]学生等待队列情况:\n托福:阅读" + 
-	            			queues['TR'].length +
-	            			", 听力" + 
-	            			queues['TL'].length + 
-	            			", 口语" + 
-	            			queues['TS'].length + 
-	            			", 写作" + 
-	            			queues['TW'].length + 
-	            			";" + 
-	            			"\n雅思:阅读" + 
-	            			queues['IR'].length + 
-	            			", 听力" + 
-	            			queues['IL'].length + 
-	            			", 口语" + 
-	            			queues['IS'].length + 
-	            			", 写作" + 
-	            			queues['IW'].length + 
-	            			";" + 
-	            			"\nSAT:语法" + 
-	            			queues['SG'].length + 
-	            			", 写作" + 
-	            			queues['SW'].length + 
-	            			", 阅读" + 
-	            			queues['SR'].length + 
-	            			", 词汇" + 
-	            			queues['SV'].length + 
-	            			", 数学" + 
-	            			queues['SM'].length + 
-	            			";").toXML());
+			res.send(msg.makeResponseMessage('text', getStats()).toXML());
 			return;
 		}	
 
@@ -234,7 +224,7 @@ module.exports = function(app){
 							ongoing[user] = {'user': client, 'session': session};
 
 
-							msg.makeResponseMessage('text', '[SYS]开始与学生对话。主题是' + subjectMapping[subject]).forwardTo(app.get('ACCESSTOKEN'), user, function(){
+							msg.makeResponseMessage('text', '[SYS]开始答疑(' + subjectMapping[subject]+')').forwardTo(app.get('ACCESSTOKEN'), user, function(){
 									forwardMessagesSync(app.get('ACCESSTOKEN'), user, messages);
 
 							});
@@ -242,19 +232,12 @@ module.exports = function(app){
 							var notif = new WeixinMessage({
 								'touser': [client],
 								'msgtype': ['text'],
-								'text': [{'content':"[SYS]你可以开始跟老师交谈了。主题是"+subjectMapping[subject]}]
+								'text': [{'content':"[SYS]你可以开始跟老师交谈了("+subjectMapping[subject]+')'}]
 							});
 
 							notif.sendThroughKefuInterface(app.get('ACCESSTOKEN'));							
 
 						});
-
-
-
-						// for (var i =0; i<messages.length; i++){
-						// 	messages[i].forwardTo(app.get('ACCESSTOKEN'), user);
-						// }
-						// forwardMessagesSync(app.get('ACCESSTOKEN'), user, messages);
 
 					//no match, add to pool	
 					}else{
@@ -290,12 +273,12 @@ module.exports = function(app){
 
 							msg.makeResponseMessage(
 								'text', 
-								'[SYS]你可以开始跟老师交谈了。主题是'+subjectMapping[subject]
+								'[SYS]你可以开始跟老师交谈了('+subjectMapping[subject]+')'
 								).forwardTo(app.get('ACCESSTOKEN'), user);	
 
 							msg.makeResponseMessage(
 								'text', 
-								'[SYS]开始答疑。主题是'+subjectMapping[subject]
+								'[SYS]开始答疑('+subjectMapping[subject]+')'
 								).forwardTo(app.get('ACCESSTOKEN'), staff);	
 
 
@@ -352,36 +335,7 @@ module.exports = function(app){
 			            var msg2 = new WeixinMessage(msgData);
 			            msg2.sendThroughKefuInterface(app.get('ACCESSTOKEN'), function(){
 			            		//TODO:tell staff how many students are waiting
-			            		msgData['text'][0]['content'] = 
-			            			"[SYS]学生等待队列情况:\n托福:阅读" + 
-			            			queues['TR'].length +
-			            			", 听力" + 
-			            			queues['TL'].length + 
-			            			", 口语" + 
-			            			queues['TS'].length + 
-			            			", 写作" + 
-			            			queues['TW'].length + 
-			            			";" + 
-			            			"\n雅思:阅读" + 
-			            			queues['IR'].length + 
-			            			", 听力" + 
-			            			queues['IL'].length + 
-			            			", 口语" + 
-			            			queues['IS'].length + 
-			            			", 写作" + 
-			            			queues['IW'].length + 
-			            			";" + 
-			            			"\nSAT:语法" + 
-			            			queues['SG'].length + 
-			            			", 写作" + 
-			            			queues['SW'].length + 
-			            			", 阅读" + 
-			            			queues['SR'].length + 
-			            			", 词汇" + 
-			            			queues['SV'].length + 
-			            			", 数学" + 
-			            			queues['SM'].length + 
-			            			";";
+			            		msgData['text'][0]['content'] = getStats();
 
 			            		var msg3 = new WeixinMessage(msgData);
 			            		console.log(msg3);
