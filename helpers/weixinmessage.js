@@ -171,6 +171,8 @@ WeixinMessage.prototype.sendThroughKefuInterface = function(token, cb){
 WeixinMessage.prototype.log = function(){
 	var l = new Log({content_json:this.toFormatJSON()});
 	l.save();
+  console.log('weixinmessage: _id: %j', l._id);
+  this._id = l._id;
 };
 
 WeixinMessage.prototype.saveStaff = function(){

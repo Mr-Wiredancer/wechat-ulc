@@ -1,5 +1,6 @@
 // var Session = require('../models/session.js');
 var WeixinMessage = require('../helpers/weixinmessage.js')
+  , Session = require('../models/session.js')
 	, Staff = require('../models/staff.js');
 
 var subjectMapping = {
@@ -217,21 +218,27 @@ module.exports = function(app){
 							, client = data.user
 							, messages = data.messages;
 
-						ongoing[client] = user;
-						ongoing[user] = client;
+						Session.create(function(err, session){
+							ongoing[client] = {'user': user, 'session': session};
+							ongoing[user] = {'user': client, 'session': session};
 
-						msg.makeResponseMessage('text', '[SYS]开始与学生对话').forwardTo(app.get('ACCESSTOKEN'), user, function(){
-								forwardMessagesSync(app.get('ACCESSTOKEN'), user, messages);
+
+							msg.makeResponseMessage('text', '[SYS]开始与学生对话').forwardTo(app.get('ACCESSTOKEN'), user, function(){
+									forwardMessagesSync(app.get('ACCESSTOKEN'), user, messages);
+
+							});
+
+							var notif = new WeixinMessage({
+								'touser': [client],
+								'msgtype': ['text'],
+								'text': [{'content':"[SYS]你可以开始跟老师交谈了"}]
+							});
+
+							notif.sendThroughKefuInterface(app.get('ACCESSTOKEN'));							
 
 						});
 
-						var notif = new WeixinMessage({
-							'touser': [client],
-							'msgtype': ['text'],
-							'text': [{'content':"[SYS]你可以开始跟老师交谈了"}]
-						});
 
-						notif.sendThroughKefuInterface(app.get('ACCESSTOKEN'));
 
 						// for (var i =0; i<messages.length; i++){
 						// 	messages[i].forwardTo(app.get('ACCESSTOKEN'), user);
@@ -265,19 +272,24 @@ module.exports = function(app){
 						var staff = Object.keys(staffs[subject]).pop();
 						delete staffs[subject][staff];
 
-						ongoing[staff] = user;
-						ongoing[user] = staff;
+						Session.create(function(err, session){
 
-						msg.makeResponseMessage(
-							'text', 
-							'[SYS]你可以开始跟老师交谈了'
-							).forwardTo(app.get('ACCESSTOKEN'), user);	
+							ongoing[staff] = {'user':user, 'session':session};
+							ongoing[user] = {'user':staff, 'session':session};
 
-						msg.makeResponseMessage(
-							'text', 
-							'[SYS]开始答疑'
-							).forwardTo(app.get('ACCESSTOKEN'), staff);	
+							msg.makeResponseMessage(
+								'text', 
+								'[SYS]你可以开始跟老师交谈了'
+								).forwardTo(app.get('ACCESSTOKEN'), user);	
 
+							msg.makeResponseMessage(
+								'text', 
+								'[SYS]开始答疑'
+								).forwardTo(app.get('ACCESSTOKEN'), staff);	
+
+
+						});
+	
 					//NEED to wait
 					}else{
 
@@ -306,7 +318,7 @@ module.exports = function(app){
 
 			if (user in ongoing) {
 
-				var otherUser = ongoing[user];
+				var otherUser = ongoing[user]['user'];
 
 				var client = req.isFromStaff?otherUser:user;
 				var staff = req.isFromStaff?user:otherUser;
@@ -372,9 +384,14 @@ module.exports = function(app){
 			console.log('weixinsession: normal msg');
 			var pos = getPosOfClient(user);
 			if (user in ongoing){
-				msg.forwardTo(app.get('ACCESSTOKEN'), ongoing[user], function(){});
+				Session.update(ongoing['session'], {$push: msg._id}, function(err, numberAffected, rawResponse){
 
-				res.send('');
+					msg.forwardTo(app.get('ACCESSTOKEN'), ongoing[user]['user'], function(){});
+
+					res.send('');
+
+				});
+
 			}else if(pos){
 				pos.queue[pos.index].messages.push(msg);
 				res.send('');
