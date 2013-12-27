@@ -395,7 +395,7 @@ module.exports = function(app){
 			console.log('weixinsession: normal msg');
 			var pos = getPosOfClient(user);
 			if (user in ongoing){
-				Session.update(ongoing[user]['session'],  {$push: {logs: msg._id}}, { upsert: true }, function(err, numberAffected, rawResponse){
+				Session.update({_id:ongoing[user]['session']._id},  {$push: {logs: msg._id}}, { upsert: true }, function(err, numberAffected, rawResponse){
 					console.log('update: num: %j, resopnse: %j', numberAffected, rawResponse);
 					if (err){
 						console.log('update session error: %j', err);
