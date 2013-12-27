@@ -138,7 +138,9 @@ var forwardMessagesSync = function(token, user, messages){
 			console.log('update session error: %j', err);
 		}
 
-		msg.forwardTo(token, user, function(){forwardMessagesSync(token, user, messages)});
+		msg.forwardTo(token, user, function(){
+			forwardMessagesSync(token, user, messages);
+		});
 	});
 
 };
