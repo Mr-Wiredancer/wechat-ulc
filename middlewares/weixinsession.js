@@ -234,7 +234,7 @@ module.exports = function(app){
 							ongoing[user] = {'user': client, 'session': session};
 
 
-							msg.makeResponseMessage('text', '[SYS]开始与学生对话').forwardTo(app.get('ACCESSTOKEN'), user, function(){
+							msg.makeResponseMessage('text', '[SYS]开始与学生对话。主题是' + subjectMapping[subject]).forwardTo(app.get('ACCESSTOKEN'), user, function(){
 									forwardMessagesSync(app.get('ACCESSTOKEN'), user, messages);
 
 							});
@@ -242,7 +242,7 @@ module.exports = function(app){
 							var notif = new WeixinMessage({
 								'touser': [client],
 								'msgtype': ['text'],
-								'text': [{'content':"[SYS]你可以开始跟老师交谈了"}]
+								'text': [{'content':"[SYS]你可以开始跟老师交谈了。主题是"+subjectMapping[subject]}]
 							});
 
 							notif.sendThroughKefuInterface(app.get('ACCESSTOKEN'));							
@@ -290,12 +290,12 @@ module.exports = function(app){
 
 							msg.makeResponseMessage(
 								'text', 
-								'[SYS]你可以开始跟老师交谈了'
+								'[SYS]你可以开始跟老师交谈了。主题是'+subjectMapping[subject]
 								).forwardTo(app.get('ACCESSTOKEN'), user);	
 
 							msg.makeResponseMessage(
 								'text', 
-								'[SYS]开始答疑'
+								'[SYS]开始答疑。主题是'+subjectMapping[subject]
 								).forwardTo(app.get('ACCESSTOKEN'), staff);	
 
 
