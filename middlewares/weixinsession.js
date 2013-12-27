@@ -324,7 +324,7 @@ module.exports = function(app){
 			res.send('');
 			return;
 
-		}else if(msg.isEndConversationCommand()){
+		}else if(msg.isEndConversationCommand() && req.isFromStaff){
 			console.log('weixinsession: msg is end conversation command');
 
 			if (user in ongoing) {
@@ -339,51 +339,57 @@ module.exports = function(app){
 				var msgData = {
                   'touser': [client],
                   'msgtype': ['text'],
-                  'text': [{'content':"[SYS]对话已结束"}]
+                  'text': [{'content':"/:bye"}]
                 };
 
-	            var msg1 = new WeixinMessage(msgData);
-	            msg1.sendThroughKefuInterface(app.get('ACCESSTOKEN'));
+                var goodbyeMsg = new WeixinMessage(msgData);
+                goodbyeMsg.sendThroughKefuInterface(app.get('ACCESSTOKEN'), function(){
+						msgData.text[0]['content'] = '[SYS]对话已结束'
+			            var msg1 = new WeixinMessage(msgData);
+			            msg1.sendThroughKefuInterface(app.get('ACCESSTOKEN'));
 
-	            msgData.touser = [staff];
-	            var msg2 = new WeixinMessage(msgData);
-	            msg2.sendThroughKefuInterface(app.get('ACCESSTOKEN'), function(){
-	            		//TODO:tell staff how many students are waiting
-	            		msgData['text'][0]['content'] = 
-	            			"[SYS]学生等待队列情况:\n托福:阅读" + 
-	            			queues['TR'].length +
-	            			", 听力" + 
-	            			queues['TL'].length + 
-	            			", 口语" + 
-	            			queues['TS'].length + 
-	            			", 写作" + 
-	            			queues['TW'].length + 
-	            			";" + 
-	            			"\n雅思:阅读" + 
-	            			queues['IR'].length + 
-	            			", 听力" + 
-	            			queues['IL'].length + 
-	            			", 口语" + 
-	            			queues['IS'].length + 
-	            			", 写作" + 
-	            			queues['IW'].length + 
-	            			";" + 
-	            			"\nSAT:语法" + 
-	            			queues['SG'].length + 
-	            			", 写作" + 
-	            			queues['SW'].length + 
-	            			", 阅读" + 
-	            			queues['SR'].length + 
-	            			", 词汇" + 
-	            			queues['SV'].length + 
-	            			", 数学" + 
-	            			queues['SM'].length + 
-	            			";";
+			            msgData.touser = [staff];
+			            var msg2 = new WeixinMessage(msgData);
+			            msg2.sendThroughKefuInterface(app.get('ACCESSTOKEN'), function(){
+			            		//TODO:tell staff how many students are waiting
+			            		msgData['text'][0]['content'] = 
+			            			"[SYS]学生等待队列情况:\n托福:阅读" + 
+			            			queues['TR'].length +
+			            			", 听力" + 
+			            			queues['TL'].length + 
+			            			", 口语" + 
+			            			queues['TS'].length + 
+			            			", 写作" + 
+			            			queues['TW'].length + 
+			            			";" + 
+			            			"\n雅思:阅读" + 
+			            			queues['IR'].length + 
+			            			", 听力" + 
+			            			queues['IL'].length + 
+			            			", 口语" + 
+			            			queues['IS'].length + 
+			            			", 写作" + 
+			            			queues['IW'].length + 
+			            			";" + 
+			            			"\nSAT:语法" + 
+			            			queues['SG'].length + 
+			            			", 写作" + 
+			            			queues['SW'].length + 
+			            			", 阅读" + 
+			            			queues['SR'].length + 
+			            			", 词汇" + 
+			            			queues['SV'].length + 
+			            			", 数学" + 
+			            			queues['SM'].length + 
+			            			";";
 
-	            		var msg3 = new WeixinMessage(msgData);
-	            		console.log(msg3);
-	            		msg3.sendThroughKefuInterface(app.get('ACCESSTOKEN'));
-	            });
+			            		var msg3 = new WeixinMessage(msgData);
+			            		console.log(msg3);
+			            		msg3.sendThroughKefuInterface(app.get('ACCESSTOKEN'));
+			            });                	
+
+                });
+	                
 
 			} else {
 				msg.makeResponseMessage('text', '[SYS]你没有在任何对话中').forwardTo(app.get('ACCESSTOKEN'), user);
