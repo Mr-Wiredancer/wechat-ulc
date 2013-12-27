@@ -113,7 +113,7 @@ WeixinMessage.prototype.isStartConversationCommand = function(){
 }
 
 WeixinMessage.prototype.isEndConversationCommand = function(){
-	return /^(!|！)结束对话$/.test(this.Content);
+	return /^((!|！)结束对话|\/:bye)$/.test(this.Content);
 };
 
 WeixinMessage.prototype.isRegisterCommand = function(){
