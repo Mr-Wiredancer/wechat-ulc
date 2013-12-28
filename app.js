@@ -14,6 +14,7 @@ var express = require('express')
   , identityChecker = require('./middlewares/identitychecker.js')
   , sysCommandHandler = require('./middlewares/syscommand.js')
   , weixinSession = require('./middlewares/weixinsession.js')
+  , Token = require('./models/token.js')
   , weixin = require('./controllers/weixin.js');
 
 var app = express()
@@ -29,6 +30,7 @@ var updateAccessToken = function(){
   requestify.get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='+APPID+'&secret='+APPSECRET).then(function(response){
       var token = response.getBody()['access_token'];
       if (token){
+        Token.create({'token':token});
         app.set('ACCESSTOKEN', token);
       }
       console.log("TOKEN: "+token);
